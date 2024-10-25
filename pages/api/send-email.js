@@ -67,10 +67,23 @@ export default async function handler(req, res) {
 
     // Iterate over rows and send an email if email is present
     for (let i = 1; i < rows.length; i++) {
-      const [name, email] = rows[i];
-      if (email) {
+      const [name, email, existingTicketId] = rows[i]; // Assuming Ticket ID is in Column C
+      if (email) {    
+        
+        let ticketId = existingTicketId;
 
-        const ticketId = generateTicketId();
+        if (!existingTicketId) {
+          ticketId = generateTicketId();
+
+          // Update Google Sheets with the generated ticket ID only if it's new
+          await gsapi.spreadsheets.values.update({
+            spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+            range: `Master List!C${i + 1}`, // Assuming Column C is for Ticket IDs
+            valueInputOption: "RAW",
+            resource: { values: [[ticketId]] },
+          });
+        }
+
         // Generate URL that points to the API endpoint with ticketId
         const verificationUrl = `https://2025-special-convention.vercel.app/api/verify-ticket?ticketId=${ticketId}`;
 
@@ -416,12 +429,6 @@ export default async function handler(req, res) {
               </html>`,
           });
 
-          await gsapi.spreadsheets.values.update({
-            spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-            range: `Master List!C${i + 1}`, // Assuming Column C is for Ticket IDs
-            valueInputOption: "RAW",
-            resource: { values: [[ticketId]] },
-          });
         } catch (error) {
           console.error(`Failed to send email to ${email}: ${error}`);
         }

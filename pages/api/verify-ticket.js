@@ -2,7 +2,8 @@ import { google } from "googleapis";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed" });
+    res.setHeader("Content-Type", "text/html");
+    return res.status(405).send("<h1>Method not allowed</h1>");
   }
 
   const { ticketId } = req.query;
@@ -29,14 +30,79 @@ export default async function handler(req, res) {
     // Find row with matching ticketId
     const match = rows.find(row => row[2] === ticketId); // Assuming Ticket ID is in Column C
 
+    // Set the content type to HTML
+    res.setHeader("Content-Type", "text/html");
+
     if (match) {
       const name = match[0]; // Assuming Name is in Column A
-      return res.status(200).json({ valid: true, name });
+      return res.status(200).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Ticket Verification</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+            .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+            h1 { color: #4CAF50; }
+            .invalid { color: #FF0000; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Ticket Verified!</h1>
+            <p>Name: <strong>${name}</strong></p>
+          </div>
+        </body>
+        </html>
+      `);
     } else {
-      return res.status(404).json({ valid: false, message: "Ticket ID not found" });
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Ticket Verification</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+            .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+            h1 { color: #FF0000; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Invalid Ticket</h1>
+            <p class="invalid">The ticket ID provided is not valid. Please check and try again.</p>
+          </div>
+        </body>
+        </html>
+      `);
     }
   } catch (error) {
     console.error("Error verifying ticket:", error);
-    return res.status(500).json({ error: true, message: error.message });
+    res.setHeader("Content-Type", "text/html");
+    return res.status(500).send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ticket Verification</title>
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+          .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+          h1 { color: #FF0000; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Error</h1>
+          <p>There was an error verifying your ticket. Please try again later.</p>
+        </div>
+      </body>
+      </html>
+    `);
   }
 }
