@@ -1,6 +1,8 @@
 import { google } from "googleapis";
 import sendgrid from "@sendgrid/mail";
 import QRCode from "qrcode";
+import AWS from "aws-sdk";
+
 
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
