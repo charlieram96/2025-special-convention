@@ -36,6 +36,7 @@ export default async function handler(req, res) {
     if (match) {
       const name = match[0]; 
       const email = match[1]; 
+      const confirmed = match[3]; 
       return res.status(200).send(`
         <!DOCTYPE html>
         <html lang="en">
@@ -52,9 +53,10 @@ export default async function handler(req, res) {
         </head>
         <body>
           <div class="container">
-            <h1>Ticket Verified!</h1>
+            <h1>Valid ticket!</h1>
             <p>Name: <strong>${name}</strong></p>
             <p>Email: <strong>${email}</strong></p>
+            <p>Confirmed: <strong>${confirmed ? 'Yes' : 'No'}</strong></p>
           </div>
         </body>
         </html>
