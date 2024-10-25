@@ -46,6 +46,7 @@ export default async function handler(req, res) {
 
         const ticketId = generateTicketId();
         const qrCodeDataURL = await QRCode.toDataURL(ticketId);
+        console.log("qrcode:", qrCodeDataURL);
 
         try {
           await sendgrid.send({
