@@ -40,5 +40,5 @@ yarn-error.log*
 next-env.d.ts
 
 # service key 
-/public/service-account-key.json
+# /public/service-account-key.json
 
