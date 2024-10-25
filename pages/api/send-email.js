@@ -71,7 +71,11 @@ export default async function handler(req, res) {
       if (email) {
 
         const ticketId = generateTicketId();
-        const qrCodeDataURL = await QRCode.toDataURL(ticketId);
+        // Generate URL that points to the API endpoint with ticketId
+        const verificationUrl = `https://2025-special-convention.vercel.app/api/verify-ticket?ticketId=${ticketId}`;
+
+        // Generate QR code for the URL
+        const qrCodeDataURL = await QRCode.toDataURL(verificationUrl);
         const qrCodeBuffer = Buffer.from(qrCodeDataURL.split(",")[1], "base64");
 
         // Upload QR code to S3 and get the public URL
