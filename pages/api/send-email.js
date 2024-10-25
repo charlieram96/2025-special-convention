@@ -1,5 +1,7 @@
 import { google } from "googleapis";
 import sendgrid from "@sendgrid/mail";
+import QRCode from "qrcode";
+
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -379,7 +381,7 @@ export default async function handler(req, res) {
                 </body>
               </html>`,
           });
-          
+
           await gsapi.spreadsheets.values.update({
             spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
             range: `Master List!C${i + 1}`, // Assuming Column C is for Ticket IDs
