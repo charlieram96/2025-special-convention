@@ -1,18 +1,17 @@
 import { google } from "googleapis";
 import sendgrid from "@sendgrid/mail";
-import keys from "../../public/service-account-key.json";
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 export default async function handler(req, res) {
   try {
     const client = new google.auth.JWT(
-      keys.client_email,
+      process.env.GOOGLE_CLIENT_EMAIL,
       null,
-      keys.private_key,
+      process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), 
       ["https://www.googleapis.com/auth/spreadsheets"]
     );
- 
+
     // Authorize and get data from Google Sheets
     await client.authorize();
     const gsapi = google.sheets({ version: "v4", auth: client });
@@ -23,14 +22,14 @@ export default async function handler(req, res) {
 
     // Fetch sheet data
     const sheetData = await gsapi.spreadsheets.values.get(opt);
-    console.log("sheet data:", sheetData);
     const rows = sheetData.data.values;
 
     if (!rows || rows.length === 0) {
       return res.status(200).json({ message: "No data found in sheet" });
     }
+
     // Iterate over rows and send an email if email is present
-    for (let i = 1; i < rows.length; i++) { // Start from 1 to skip headers
+    for (let i = 1; i < rows.length; i++) {
       const [name, email] = rows[i];
       if (email) {
         try {
