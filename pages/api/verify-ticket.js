@@ -34,7 +34,8 @@ export default async function handler(req, res) {
     res.setHeader("Content-Type", "text/html");
 
     if (match) {
-      const name = match[0]; // Assuming Name is in Column A
+      const name = match[0]; 
+      const email = match[1]; 
       return res.status(200).send(`
         <!DOCTYPE html>
         <html lang="en">
@@ -53,6 +54,7 @@ export default async function handler(req, res) {
           <div class="container">
             <h1>Ticket Verified!</h1>
             <p>Name: <strong>${name}</strong></p>
+            <p>Email: <strong>${email}</strong></p>
           </div>
         </body>
         </html>
