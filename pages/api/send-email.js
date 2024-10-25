@@ -3,6 +3,15 @@ import sendgrid from "@sendgrid/mail";
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
+function generateTicketId() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let ticketId = '';
+  for (let i = 0; i < 8; i++) {
+    ticketId += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return ticketId;
+}
+
 export default async function handler(req, res) {
   try {
     const client = new google.auth.JWT(
@@ -32,6 +41,10 @@ export default async function handler(req, res) {
     for (let i = 1; i < rows.length; i++) {
       const [name, email] = rows[i];
       if (email) {
+
+        const ticketId = generateTicketId();
+        const qrCodeDataURL = await QRCode.toDataURL(ticketId);
+
         try {
           await sendgrid.send({
             to: email,
@@ -210,7 +223,7 @@ export default async function handler(req, res) {
                           <tbody>
                             <tr>
                             <td align="center" bgcolor="#ffea05" class="inner-td" style="font-family:lucida sans unicode,lucida grande,sans-serif; margin: 20px 0 10px 0 !important; display: block; font-size:16px; text-align:center; background-color:inherit; color: #273159;">
-                              Your RSVP Code: <b>1234567</b>
+                              Your TicketID: <b>${ticketId}</b>
                             </td>
                             </tr>
                             <tr>
@@ -249,7 +262,7 @@ export default async function handler(req, res) {
                   </tr>
                   <tr>
                     <td style="font-size:6px; line-height:10px; padding:0px 0px 0px 0px;" valign="top" align="center">
-                      <img border="0" style="display:block; width: min(90%, 200px); color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:50% !important; height:auto !important;" width="200" alt="" data-proportionally-constrained="true" data-responsive="true" src="https://lessthan7.studio/media/qr-jw.png">
+                      <img border="0" style="display:block; width: min(90%, 200px); color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:50% !important; height:auto !important;" width="200" height="200" alt="" data-proportionally-constrained="true" data-responsive="true" src="${qrCodeDataURL}">
                     </td>
                   </tr>
                   <tr>
@@ -365,6 +378,13 @@ export default async function handler(req, res) {
                   </center>
                 </body>
               </html>`,
+          });
+          
+          await gsapi.spreadsheets.values.update({
+            spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+            range: `Master List!C${i + 1}`, // Assuming Column C is for Ticket IDs
+            valueInputOption: "RAW",
+            resource: { values: [[ticketId]] },
           });
         } catch (error) {
           console.error(`Failed to send email to ${email}: ${error}`);
