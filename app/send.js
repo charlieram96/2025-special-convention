@@ -17,7 +17,7 @@ export default function Send() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          to: 'charlieram96@gmail.com',
+          to: 'rjtechnology06@hotmail.com',
           subject: 'Audition Invitation',
           text: 'This is a test email sent from Next.js using SendGrid.',
         }),
