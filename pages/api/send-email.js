@@ -13,22 +13,21 @@ export default async function handler(req, res) {
       ["https://www.googleapis.com/auth/spreadsheets"]
     );
 
+    // Authorize and get data from Google Sheets
     await client.authorize();
-
     const gsapi = google.sheets({ version: "v4", auth: client });
-
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
       range: "Master List!A:Z",
     };
 
+    // Fetch sheet data
     const sheetData = await gsapi.spreadsheets.values.get(opt);
-
     const rows = sheetData.data.values;
+
     if (!rows || rows.length === 0) {
       return res.status(200).json({ message: "No data found in sheet" });
     }
-
     // Iterate over rows and send an email if email is present
     for (let i = 1; i < rows.length; i++) { // Start from 1 to skip headers
       const [name, email] = rows[i];
