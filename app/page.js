@@ -21,7 +21,7 @@ export default function Send() {
           subject: 'Audition Invitation',
           text: 'This is a test email sent from Next.js using SendGrid.',
         }),
-      });
+      }); 
 
       const data = await response.json();
 
