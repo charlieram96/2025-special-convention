@@ -56,7 +56,7 @@ export default async function handler(req, res) {
             <h1>Valid ticket!</h1>
             <p>Name: <strong>${name}</strong></p>
             <p>Email: <strong>${email}</strong></p>
-            <p>Confirmed: <strong>${confirmed == 'yes' ? 'Yes' : 'No'}</strong></p>
+            <p>Confirmed: <strong>${confirmed}</strong></p>
           </div>
         </body>
         </html>
