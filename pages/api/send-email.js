@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       keys.private_key,
       ["https://www.googleapis.com/auth/spreadsheets"]
     );
-
+ 
     // Authorize and get data from Google Sheets
     await client.authorize();
     const gsapi = google.sheets({ version: "v4", auth: client });
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
 
     // Fetch sheet data
     const sheetData = await gsapi.spreadsheets.values.get(opt);
+    console.log("sheet data:", sheetData);
     const rows = sheetData.data.values;
 
     if (!rows || rows.length === 0) {
