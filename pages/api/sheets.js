@@ -26,3 +26,4 @@ export default function handler(req, res) {
         return res.status(400).send(JSON.stringify({error: true, message: e.message}));
     }
 }
+
