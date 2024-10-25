@@ -5,6 +5,15 @@ import QRCode from "qrcode";
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+const s3 = new AWS.S3();
+
+
 function generateTicketId() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let ticketId = '';
@@ -12,6 +21,21 @@ function generateTicketId() {
     ticketId += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return ticketId;
+}
+
+// Function to upload QR code to S3
+async function uploadQRCodeToS3(ticketId, qrCodeBuffer) {
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME, // Your S3 bucket name
+    Key: `tickets/${ticketId}.png`, // File path in the bucket
+    Body: qrCodeBuffer,
+    ContentEncoding: 'base64', // Required for base64-encoded content
+    ContentType: 'image/png',
+    ACL: 'public-read', // Make the file publicly readable
+  };
+
+  const uploadResult = await s3.upload(params).promise();
+  return uploadResult.Location; // Return the URL of the uploaded QR code
 }
 
 export default async function handler(req, res) {
@@ -46,7 +70,10 @@ export default async function handler(req, res) {
 
         const ticketId = generateTicketId();
         const qrCodeDataURL = await QRCode.toDataURL(ticketId);
-        console.log("qrcode:", qrCodeDataURL);
+        const qrCodeBuffer = Buffer.from(qrCodeDataURL.split(",")[1], "base64");
+
+        // Upload QR code to S3 and get the public URL
+        const qrCodeUrl = await uploadQRCodeToS3(ticketId, qrCodeBuffer);
 
         try {
           await sendgrid.send({
@@ -265,7 +292,7 @@ export default async function handler(req, res) {
                   </tr>
                   <tr>
                     <td style="font-size:6px; line-height:10px; padding:0px 0px 0px 0px;" valign="top" align="center">
-                      <img border="0" style="display:block; width: min(90%, 200px); color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:50% !important; height:auto !important;" width="200" height="200" alt="" data-proportionally-constrained="true" data-responsive="true" src="${qrCodeDataURL}">
+                      <img border="0" style="display:block; width: min(90%, 200px); color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:50% !important; height:auto !important;" width="200" height="200" alt="" data-proportionally-constrained="true" data-responsive="true" src="${qrCodeUrl}">
                     </td>
                   </tr>
                   <tr>
