@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     // Update the "Confirmed" column (Column D) to "yes"
     await gsapi.spreadsheets.values.update({
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: `Master List!D${rowIndex + 1}`, // Column D for Confirmed
+      range: `Master List!D${rowIndex + 2}`, // Column D for Confirmed
       valueInputOption: "RAW",
       resource: { values: [["yes"]] },
     });

@@ -277,7 +277,7 @@ export default async function handler(req, res) {
                             </tr>
                             <tr>
                             <td align="center" bgcolor="#ffea05" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
-                              <a href="https://2025-special-convention.vercel.app/api/confirm-attendance?ticketId=${ticketId}" style="background-color:#F7AB54; color: #fff; border-radius:0px; border: none !important; display:inline-block; font-size:16px; font-weight:700; letter-spacing:0px; line-height:normal; padding:12px 40px 12px 40px; text-align:center; text-decoration:none; border-style:solid; font-family:lucida sans unicode,lucida grande,sans-serif;" target="_blank">Click here to confirm attendance</a>
+                              <a href="https://2025-special-convention.vercel.app/rsvp-audition?ticketId=${ticketId}" style="background-color:#F7AB54; color: #fff; border-radius:0px; border: none !important; display:inline-block; font-size:16px; font-weight:700; letter-spacing:0px; line-height:normal; padding:12px 40px 12px 40px; text-align:center; text-decoration:none; border-style:solid; font-family:lucida sans unicode,lucida grande,sans-serif;" target="_blank">Click here to RSVP</a>
                             </td>
                             </tr>
                           </tbody>

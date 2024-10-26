@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     if (match) {
       const name = match[0]; 
       const email = match[1]; 
-      const confirmedBool = match[3]; 
+      const confirmedBool = match[4]; 
       return res.status(200).send(`
         <!DOCTYPE html>
         <html lang="en">
