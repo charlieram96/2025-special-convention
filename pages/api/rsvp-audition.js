@@ -16,6 +16,8 @@ export default async function handler(req, res) {
 
   const { ticketId, name, email, phoneNumber, guestName, guestEmail } = req.body;
 
+  console.log('req.body', req.body);
+
   try {
     const client = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
@@ -40,6 +42,8 @@ export default async function handler(req, res) {
     }
 
     const [existingName, existingEmail, , confirmed, canInviteGuest, guestEmailColumn, hasInvitedGuest] = rows[rowIndex];
+    console.log('data', rows[rowIndex]);
+
 
     if (confirmed === "yes") {
       return res.status(200).json({ message: "You have already confirmed your attendance. We hope to see you soon!" });
