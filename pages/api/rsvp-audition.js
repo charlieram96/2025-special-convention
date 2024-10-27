@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "Ticket ID not found" });
     }
 
-    const [existingName, existingEmail, , confirmed, canInviteGuest, guestEmailColumn, hasInvitedGuest] = rows[rowIndex];
+    const [existingName, existingEmail, ticketId, phoneNumber, confirmed, canInviteGuest, guestEmailColumn, hasInvitedGuest] = rows[rowIndex];
     console.log('data', rows[rowIndex]);
 
 
