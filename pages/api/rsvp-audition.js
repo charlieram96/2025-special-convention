@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Master List!A:Z", // Make sure this includes columns for guest and confirmation status
+      range: "Master List!A:H", // Adjusted to include all necessary columns
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);
@@ -39,21 +39,23 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "Ticket ID not found" });
     }
 
-    const [existingName, existingEmail, , confirmed, canInviteGuest, guestEmailColumn] = rows[rowIndex];
+    const [existingName, existingEmail, , confirmed, canInviteGuest, guestEmailColumn, hasInvitedGuest] = rows[rowIndex];
 
     if (confirmed === "yes") {
       return res.status(200).json({ message: "You have already confirmed your attendance. We hope to see you soon!" });
     }
 
-    const updates = [["yes", phoneNumber]];
+    // Prepare updates array in the order of columns D, E, F, G, H
+    const updates = [phoneNumber, "yes", canInviteGuest, "", ""];
 
-    // Add guest if allowed and guest details provided
     if (canInviteGuest === "yes" && guestName && guestEmail) {
       if (guestEmailColumn) {
         return res.status(400).json({ message: "You have already invited a guest." });
       }
-      updates[0].push(guestName, guestEmail);
-      
+
+      updates[3] = guestEmail; // Column G for Guest Email
+      updates[4] = "yes"; // Column H for Has Invited Guest
+
       // Send guest invitation email
       const guestTicketId = `GUEST-${ticketId}`;
       const guestQrCode = await generateQrCode(guestTicketId);
@@ -74,9 +76,9 @@ export default async function handler(req, res) {
     // Update the Google Sheet with RSVP and guest info
     await gsapi.spreadsheets.values.update({
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: `Master List!D${rowIndex + 1}:G${rowIndex + 1}`, // Adjust range for your sheet structure
+      range: `Master List!D${rowIndex + 1}:H${rowIndex + 1}`, // Adjusted range to columns D through H
       valueInputOption: "RAW",
-      resource: { values: updates },
+      resource: { values: [updates] },
     });
 
     res.status(200).json({ message: "RSVP confirmed successfully!" });
