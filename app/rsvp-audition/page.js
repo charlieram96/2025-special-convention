@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -17,11 +16,12 @@ export default function RsvpAudition() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Ensure we are on the client side before accessing router
-    setIsClient(true);
+    setIsClient(true); // Ensure we're on the client side
 
-    if (isClient) {
+    // Wait until `router.query` is populated
+    if (isClient && router.query && router.query.ticketId) {
       const { ticketId } = router.query;
+
       if (!ticketId) {
         setMessage("No ticket ID provided. Please check your RSVP link.");
         return;
@@ -33,7 +33,7 @@ export default function RsvpAudition() {
         .then((data) => {
           if (data.success) {
             setFormData({
-              ticketId: ticketId,
+              ticketId,
               name: data.name,
               email: data.email,
               phoneNumber: data.phoneNumber || "",
@@ -49,7 +49,7 @@ export default function RsvpAudition() {
           setMessage("Error loading ticket information.");
         });
     }
-  }, [isClient]);
+  }, [isClient, router.query]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
