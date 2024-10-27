@@ -61,6 +61,8 @@ export default async function handler(req, res) {
       const guestQrCode = await generateQrCode(guestTicketId);
       const qrCodeUrl = await uploadQRCodeToS3(guestTicketId, guestQrCode);
 
+      console.log('updates', updates);
+
       await sendgrid.send({
         to: guestEmail,
         from: "charlie@lessthan7.studio",
