@@ -31,6 +31,7 @@ export default function RsvpAudition() {
       fetch(`/api/fetch-ticket-info?ticketId=${ticketId}`)
         .then((res) => res.json())
         .then((data) => {
+          console.log("data:", data);
           if (data.success) {
             setFormData({
               ticketId,
