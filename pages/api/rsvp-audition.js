@@ -63,7 +63,7 @@ export default async function handler(req, res) {
 
       await sendgrid.send({
         to: guestEmail,
-        from: "charlie@lessthan7.studio.com",
+        from: "charlie@lessthan7.studio",
         subject: "Event Invitation",
         text: `Hello ${guestName}, you have been invited to the event!`,
         html: `<p>Welcome ${guestName},</p>
