@@ -1,10 +1,8 @@
-"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function RsvpAudition() {
   const router = useRouter();
-  const { ticketId } = router.query;
   const [formData, setFormData] = useState({
     ticketId: "",
     name: "",
@@ -14,36 +12,42 @@ export default function RsvpAudition() {
     guestEmail: "",
   });
   const [message, setMessage] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    if (!ticketId) {
-      // Redirect or show an error if ticketId is not provided
-      setMessage("No ticket ID provided. Please check your RSVP link.");
-      return;
-    }
+    // Ensure we are on the client side before accessing router
+    setIsClient(true);
 
-    // Fetch the existing data if `ticketId` is present in the URL
-    fetch(`/api/fetch-ticket-info?ticketId=${ticketId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setFormData({
-            ticketId: ticketId,
-            name: data.name,
-            email: data.email,
-            phoneNumber: data.phoneNumber || "", // Prepopulate if exists
-            guestName: "",
-            guestEmail: "",
-          });
-        } else {
-          setMessage(data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching ticket info:", error);
-        setMessage("Error loading ticket information.");
-      });
-  }, [ticketId]);
+    if (isClient) {
+      const { ticketId } = router.query;
+      if (!ticketId) {
+        setMessage("No ticket ID provided. Please check your RSVP link.");
+        return;
+      }
+
+      // Fetch the existing data if `ticketId` is present in the URL
+      fetch(`/api/fetch-ticket-info?ticketId=${ticketId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setFormData({
+              ticketId: ticketId,
+              name: data.name,
+              email: data.email,
+              phoneNumber: data.phoneNumber || "",
+              guestName: "",
+              guestEmail: "",
+            });
+          } else {
+            setMessage(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching ticket info:", error);
+          setMessage("Error loading ticket information.");
+        });
+    }
+  }, [isClient]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +68,7 @@ export default function RsvpAudition() {
     setMessage(result.message);
   };
 
-  if (!ticketId) {
+  if (!isClient || !formData.ticketId) {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
         <h1>Invalid RSVP Link</h1>
