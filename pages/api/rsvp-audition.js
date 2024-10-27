@@ -98,6 +98,16 @@ export default async function handler(req, res) {
                <img src="${qrCodeUrl}" alt="QR Code" width="200" height="200" />
                <p><a href="https://2025-special-convention.vercel.app/api/confirm-attendance?ticketId=${guestTicketId}">Click here to confirm</a></p>`,
       });
+
+       // Add the guest as a new row in Google Sheets
+       await gsapi.spreadsheets.values.append({
+        spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+        range: "Master List!A:H",
+        valueInputOption: "RAW",
+        resource: {
+          values: [[guestName, guestEmail, guestTicketId, "", "", "no"]], // Populate the columns for Name, Email, Ticket ID, Phone, and Can Invite Guest
+        },
+      });
     }
 
     // Update the Google Sheet with RSVP and guest info
