@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Master List!A:E", // Assuming Ticket IDs are in Column C and Confirmation in Column D
+      range: "Master List!A:E", // Adjusted to include Column E for confirmation status
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);
@@ -48,10 +48,10 @@ export default async function handler(req, res) {
       `);
     }
 
-    // Update the "Confirmed" column (Column D) to "yes"
+    // Update the "Confirmed" column (Column E) to "yes"
     await gsapi.spreadsheets.values.update({
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: `Master List!D${rowIndex + 3}`, // Column D for Confirmed
+      range: `Master List!E${rowIndex + 1}`, // Column E for Confirmed
       valueInputOption: "RAW",
       resource: { values: [["yes"]] },
     });
