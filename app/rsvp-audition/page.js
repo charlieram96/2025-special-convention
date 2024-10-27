@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function RsvpAudition() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     ticketId: "",
     name: "",
@@ -14,18 +14,15 @@ export default function RsvpAudition() {
   });
   const [message, setMessage] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state to control initial display
 
   useEffect(() => {
-    setIsClient(true); // Ensure we're on the client side
+    setIsClient(true);
 
-    // Wait until `router.query` is populated
-    if (isClient && router.query && router.query.ticketId) {
-      const { ticketId } = router.query;
+    const ticketId = searchParams.get("ticketId");
 
-      if (!ticketId) {
-        setMessage("No ticket ID provided. Please check your RSVP link.");
-        return;
-      }
+    if (isClient && ticketId) {
+      console.log("fetching ticket data");
 
       // Fetch the existing data if `ticketId` is present in the URL
       fetch(`/api/fetch-ticket-info?ticketId=${ticketId}`)
@@ -41,6 +38,7 @@ export default function RsvpAudition() {
               guestName: "",
               guestEmail: "",
             });
+            setMessage("");
           } else {
             setMessage(data.message);
           }
@@ -48,9 +46,13 @@ export default function RsvpAudition() {
         .catch((error) => {
           console.error("Error fetching ticket info:", error);
           setMessage("Error loading ticket information.");
-        });
+        })
+        .finally(() => setLoading(false)); // Set loading to false once data is loaded
+    } else if (!ticketId) {
+      setMessage("No ticket ID provided. Please check your RSVP link.");
+      setLoading(false); // Stop loading if ticketId is missing
     }
-  }, [isClient, router.query]);
+  }, [isClient, searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +72,10 @@ export default function RsvpAudition() {
     const result = await response.json();
     setMessage(result.message);
   };
+
+  if (loading) {
+    return <p>Loading...</p>; // Display loading message while checking ticket ID
+  }
 
   if (!isClient || !formData.ticketId) {
     return (
