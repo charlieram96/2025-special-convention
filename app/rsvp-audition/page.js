@@ -63,7 +63,7 @@ function RsvpAuditionContent() {
     e.preventDefault();
     setMessage("Submitting...");
 
-    const response = await fetch("/api/rsvp", {
+    const response = await fetch("/api/rsvp-audition", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
