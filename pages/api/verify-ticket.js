@@ -33,10 +33,14 @@ export default async function handler(req, res) {
     // Set the content type to HTML
     res.setHeader("Content-Type", "text/html");
 
+    // Determine if it's a guest ticket
+    const isGuestTicket = ticketId.startsWith("GUEST");
+
     if (match) {
-      const name = match[0]; 
-      const email = match[1]; 
-      const confirmedBool = match[4]; 
+      const name = match[0];
+      const email = match[1];
+      const confirmedBool = match[4];
+
       return res.status(200).send(`
         <!DOCTYPE html>
         <html lang="en">
@@ -47,16 +51,16 @@ export default async function handler(req, res) {
           <style>
             body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
             .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-            h1 { color: #4CAF50; }
+            h1 { color: ${isGuestTicket ? "#FF5722" : "#4CAF50"}; }
             .invalid { color: #FF0000; }
           </style>
         </head>
         <body>
           <div class="container">
-            <h1>Valid ticket!</h1>
+            <h1>${isGuestTicket ? "Guest Ticket" : "Valid Ticket!"}</h1>
             <p>Name: <strong>${name}</strong></p>
             <p>Email: <strong>${email}</strong></p>
-            <p>Confirmed: <strong>${confirmedBool == 'yes' ? 'Yes' : 'No'}</strong></p>
+            <p>Confirmed: <strong>${confirmedBool === 'yes' ? 'Yes' : 'No'}</strong></p>
           </div>
         </body>
         </html>
