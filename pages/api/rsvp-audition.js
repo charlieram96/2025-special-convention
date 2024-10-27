@@ -4,6 +4,20 @@ import QRCode from "qrcode";
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
+async function uploadQRCodeToS3(ticketId, qrCodeBuffer) {
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME, // Your S3 bucket name
+      Key: `tickets/${ticketId}.png`, // File path in the bucket
+      Body: qrCodeBuffer,
+      ContentEncoding: 'base64', // Required for base64-encoded content
+      ContentType: 'image/png',
+      ACL: 'public-read', // Make the file publicly readable
+    };
+  
+    const uploadResult = await s3.upload(params).promise();
+    return uploadResult.Location; // Return the URL of the uploaded QR code
+  }
+
 async function generateQrCode(ticketId) {
   const qrCodeDataURL = await QRCode.toDataURL(`https://2025-special-convention.vercel.app/api/verify-ticket?ticketId=${ticketId}`);
   return Buffer.from(qrCodeDataURL.split(",")[1], "base64");
@@ -14,9 +28,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { ticketId, name, email, phoneNumber, guestName, guestEmail } = req.body;
-
-  console.log('req.body', req.body);
+  const { ticketId: reqTicketId, name, email, phoneNumber, guestName, guestEmail } = req.body;
 
   try {
     const client = new google.auth.JWT(
@@ -30,26 +42,25 @@ export default async function handler(req, res) {
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Master List!A:H", // Adjusted to include all necessary columns
+      range: "Master List!A:H", // Includes all necessary columns
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);
     const rows = sheetData.data.values;
-    const rowIndex = rows.findIndex(row => row[2] === ticketId);
+    const rowIndex = rows.findIndex(row => row[2] === reqTicketId); // Find row based on ticket ID
 
     if (rowIndex === -1) {
       return res.status(404).json({ message: "Ticket ID not found" });
     }
 
-    const [existingName, existingEmail, ticketId, phoneNumber, confirmed, canInviteGuest, guestEmailColumn, hasInvitedGuest] = rows[rowIndex];
+    const [existingName, existingEmail, ticketId, existingPhone, confirmed, canInviteGuest, guestEmailColumn, hasInvitedGuest] = rows[rowIndex];
     console.log('data', rows[rowIndex]);
-
 
     if (confirmed === "yes") {
       return res.status(200).json({ message: "You have already confirmed your attendance. We hope to see you soon!" });
     }
 
-    // Prepare updates array in the order of columns D, E, F, G, H
+    // Prepare updates array for columns D, E, F, G, H
     const updates = [phoneNumber, "yes", canInviteGuest, "", ""];
 
     if (canInviteGuest === "yes" && guestName && guestEmail) {
@@ -61,7 +72,7 @@ export default async function handler(req, res) {
       updates[4] = "yes"; // Column H for Has Invited Guest
 
       // Send guest invitation email
-      const guestTicketId = `GUEST-${ticketId}`;
+      const guestTicketId = `GUEST-${reqTicketId}`;
       const guestQrCode = await generateQrCode(guestTicketId);
       const qrCodeUrl = await uploadQRCodeToS3(guestTicketId, guestQrCode);
 
@@ -82,7 +93,7 @@ export default async function handler(req, res) {
     // Update the Google Sheet with RSVP and guest info
     await gsapi.spreadsheets.values.update({
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: `Master List!D${rowIndex + 1}:H${rowIndex + 1}`, // Adjusted range to columns D through H
+      range: `Master List!D${rowIndex + 1}:H${rowIndex + 1}`, // Ensure range aligns with columns D through H
       valueInputOption: "RAW",
       resource: { values: [updates] },
     });
