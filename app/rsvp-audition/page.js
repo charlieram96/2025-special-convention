@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function RsvpAudition() {
+function RsvpAuditionContent() {
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     ticketId: "",
@@ -100,5 +100,13 @@ export default function RsvpAudition() {
         <button type="submit">Confirm RSVP</button>
       </form>
     </div>
+  );
+}
+
+export default function RsvpAudition() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <RsvpAuditionContent />
+    </Suspense>
   );
 }
