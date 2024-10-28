@@ -6,6 +6,23 @@ export default function Send() {
   const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
+
+  const handleSendResultsEmails = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/send-results-email", { method: "POST" });
+      const result = await response.json();
+      alert(result.message);
+    } catch (error) {
+      console.error("Error sending results emails:", error);
+      alert("Failed to send emails. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Function to send a test email
   const sendTestEmail = async () => {
     setIsSending(true);
@@ -44,6 +61,14 @@ export default function Send() {
         {isSending ? 'Sending...' : 'Send Email'}
       </button>
       {message && <p>{message}</p>}
+
+      <button
+        onClick={handleSendResultsEmails}
+        style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
+        disabled={loading}
+      >
+        {loading ? "Sending Emails..." : "Send Results Emails"}
+      </button>
     </div>
   );
 }
