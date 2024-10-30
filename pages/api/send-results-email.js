@@ -67,7 +67,7 @@ export default async function handler(req, res) {
 
       if (result === "Accept") {
         const newTicketId = generateTicketId();
-        const qrCodeDataURL = await QRCode.toDataURL(`https://2025-special-convention.vercel.app/api/verify-ticket?ticketId=${newTicketId}`);
+        const qrCodeDataURL = await QRCode.toDataURL(`https://2025-special-convention.vercel.app/api/verify-final-ticket?ticketId=${newTicketId}`);
         const qrCodeBuffer = Buffer.from(qrCodeDataURL.split(",")[1], "base64");
         const qrCodeUrl = await uploadQRCodeToS3(newTicketId, qrCodeBuffer);
 
