@@ -285,36 +285,31 @@ export default async function handler(req, res) {
                   <tbody>
                     <tr>
                     <td style="padding:18px 60px 18px 60px; line-height:26px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: left"><span style="color: #273159; font-size: 16px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">
-                        Date: Saturday, June 15, 2024
-                        <br>
-                        Location: Plant City Assembly Hall
-                        <br>
-                        Address: 1904 N Frontage Rd, Plant City, FL 33563
-                        <br>
-                        Check-in: 9:30 AM
-                        <br>
-                        Opening Prayer & Workshop Start: 10:00 AM
-                        <br>
-                        Kids Check-in: 12:00 PM
-                        <br>
-                        Branch Spiritual Point: 1:00 PM
-                        <br>
-                        Production Content Rehearsal: 1:30 PM
-                        <br>
-                        Adjourn & Cleaning: 6:00 PM
-                        <br><br>
-                        The following QR code will serve as your ticket of entry:
+                    Date: Saturday, June 15, 2024
+                    <br>
+                    Location: Uleta Hall
+                    <br>
+                    Address: 14521 Memorial Hwy, Miami, FL 33161
+                    <br>
+                    Check-in: 9:30 AM
+                    <br>
+                    Opening Prayer & Workshop Start: 10:00 AM
+                    <br>
+                    Branch Spiritual Point: 1:00 PM
+                    <br>
+                    Production Content Rehearsal: 1:30 PM
+                    <br>
+                    Adjourn & Cleaning: 6:00 PM
+                    <br><br>
+                    The following QR code will serve as your ticket of entry:
                     </td>
                   </tr>
                   <tr>
-                    <td style="font-size:6px; line-height:10px; padding:0px 0px 0px 0px;" valign="top" align="center">
+                    <td style="font-size:6px; line-height:10px; padding:0px 0px 100px 0px;" valign="top" align="center">
                       <img border="0" style="display:block; width: min(90%, 200px); color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:50% !important; height:auto !important;" width="200" height="200" alt="" data-proportionally-constrained="true" data-responsive="true" src="${qrCodeUrl}">
                     </td>
                   </tr>
-                  <tr>
-                    <td align="center" bgcolor="#ffea05" class="inner-td" style="font-family:lucida sans unicode,lucida grande,sans-serif; margin: 0px 0 10px 0 !important; display: block; font-size:16px; text-align:center; background-color:inherit; color: #273159;">
-                      Download/print
-                    </td>
+                  
                 </tr>
                 </tbody>
                 </table><table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" role="module" data-type="columns" style="padding:30px 20px 0px 20px;" bgcolor="#ffffff" data-distribution="1">
