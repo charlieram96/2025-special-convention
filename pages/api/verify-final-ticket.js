@@ -39,7 +39,6 @@ export default async function handler(req, res) {
     if (match) {
       const name = match[0];
       const email = match[1];
-      const confirmedBool = match[4];
 
       return res.status(200).send(`
         <!DOCTYPE html>
@@ -60,7 +59,6 @@ export default async function handler(req, res) {
             <h1>${isGuestTicket ? "Guest Ticket" : "Valid Ticket!"}</h1>
             <p>Name: <strong>${name}</strong></p>
             <p>Email: <strong>${email}</strong></p>
-            <p>Confirmed: <strong>${confirmedBool === 'yes' ? 'Yes' : 'No'}</strong></p>
           </div>
         </body>
         </html>
