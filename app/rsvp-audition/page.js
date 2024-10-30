@@ -91,50 +91,52 @@ function RsvpAuditionContent() {
   }
 
   return (
-    <div style={{ textAlign: "center", marginTop: "30px" }} className={styles.page_wrap}>
-      <img src={logo.src} alt="" className={styles.logo} />
-      <h1 style={{marginTop: '30px'}}>Welcome</h1>
-      <p>Please RSVP for the auditions using the form below</p>
-      {message ? <p className={styles.result_message}>{message}</p> : <></>}
-      <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "40px 0 100px 0", display: "flex", flexDirection: "column", gap: "30px", width: "100%", alignItems: "center"}}>
-        <div className={styles.input_wrap}>
-          <input type="text" name="ticketId" value={formData.ticketId} readOnly />
-          <div className={styles.input_desc}>
-            Ticket ID *
+    <div style={{ textAlign: "center" }} className={styles.page_wrap}>
+      <div className={styles.page_conent}>
+        <img src={logo.src} alt="" className={styles.logo} />
+        <h1 style={{marginTop: '30px'}}>Welcome</h1>
+        <p>Please RSVP for the auditions using the form below</p>
+        {message ? <p className={styles.result_message}>{message}</p> : <></>}
+        <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "40px 0 100px 0", display: "flex", flexDirection: "column", gap: "30px", width: "100%", alignItems: "center"}}>
+          <div className={styles.input_wrap}>
+            <input type="text" name="ticketId" value={formData.ticketId} readOnly />
+            <div className={styles.input_desc}>
+              Ticket ID *
+            </div>
           </div>
-        </div>
-        <div className={styles.input_wrap}>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} />
-          <div className={styles.input_desc}>
-            Name *
+          <div className={styles.input_wrap}>
+            <input type="text" name="name" value={formData.name} onChange={handleChange} />
+            <div className={styles.input_desc}>
+              Name *
+            </div>
           </div>
-        </div>
-        <div className={styles.input_wrap}>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
-          <div className={styles.input_desc}>
-            Email *
+          <div className={styles.input_wrap}>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} />
+            <div className={styles.input_desc}>
+              Email *
+            </div>
           </div>
-        </div>
-        <div className={styles.input_wrap}>
-          <input type="text" name="phoneNumber" placeholder="" value={formData.phoneNumber} onChange={handleChange} />
-          <div className={styles.input_desc}>
-            Phone Number
+          <div className={styles.input_wrap}>
+            <input type="text" name="phoneNumber" placeholder="" value={formData.phoneNumber} onChange={handleChange} />
+            <div className={styles.input_desc}>
+              Phone Number
+            </div>
           </div>
-        </div>
-        <div className={styles.input_wrap}>
-          <input type="text" name="guestName" placeholder="" onChange={handleChange} />
-          <div className={styles.input_desc}>
-            Guest Name
+          <div className={styles.input_wrap}>
+            <input type="text" name="guestName" placeholder="" onChange={handleChange} />
+            <div className={styles.input_desc}>
+              Guest Name
+            </div>
           </div>
-        </div>
-        <div className={styles.input_wrap}>
-          <input type="email" name="guestEmail" placeholder="" onChange={handleChange} />
-          <div className={styles.input_desc}>
-            Guest Email
+          <div className={styles.input_wrap}>
+            <input type="email" name="guestEmail" placeholder="" onChange={handleChange} />
+            <div className={styles.input_desc}>
+              Guest Email
+            </div>
           </div>
-        </div>
-        <button type="submit" className={styles.rsvp_button}>Confirm RSVP</button>
-      </form>
+          <button type="submit" className={styles.rsvp_button}>Confirm RSVP</button>
+        </form>
+      </div>
     </div>
   );
 }

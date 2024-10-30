@@ -1,8 +1,16 @@
 .page_wrap {
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page_conent {
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #fff;
+    padding: 30px 120px;
 }
 
 .logo {
@@ -22,13 +30,13 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    width: min(300px, 100%) !important;
+    width: min(350px, 100%) !important;
 }
 
 .input_wrap input {
     border: none;
     border-bottom: 1px solid #65bbc8;
-    background-color: var(--background);
+    background-color: #fff;
     color: var(--foreground);
     text-align: center;
     font-family: "Noto Sans", sans-serif;
@@ -42,7 +50,7 @@
     border: none;
     border-bottom: 1px solid #65bbc8;
     outline: none;
-    background-color: var(--background);
+    background-color: #fff;
 }
 
 .input_desc {
