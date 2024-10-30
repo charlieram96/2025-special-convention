@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import styles from './Audition.module.css';
 
 export default function Audition() {
   const [auditionList, setAuditionList] = useState([]);
@@ -67,18 +68,18 @@ export default function Audition() {
   });
 
   return (
-    <div style={{ textAlign: "center", margin: "20px" }}>
+    <div style={{ textAlign: "center", margin: "20px" }} className={styles.audition_wrap}>
       <h1>Audition Scoring</h1>
       <input
         type="text"
-        placeholder="Search by Auditionee Number"
+        placeholder="Search by number"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ padding: "10px", fontSize: "16px", width: "300px", margin: "10px 0" }}
+        className={styles.audition_search}
       />
       
       {/* Filter Buttons */}
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "20px" }} className={styles.filter_buttons}>
         {["Vocals", "Instrument", "Dance"].map((type) => (
           <button
             key={type}
@@ -87,8 +88,8 @@ export default function Audition() {
               padding: "10px 20px",
               fontSize: "16px",
               margin: "0 5px",
-              backgroundColor: filterTypes[type] ? "#007BFF" : "#ddd",
-              color: filterTypes[type] ? "#fff" : "#000",
+              backgroundColor: filterTypes[type] ? "#0088AD" : "#addbe3",
+              color: filterTypes[type] ? "#fff" : "#fff",
               border: "none",
               borderRadius: "5px",
               cursor: "pointer",
@@ -104,7 +105,7 @@ export default function Audition() {
       ) : (
         <div>
           {filteredList.map((auditionee) => (
-            <div key={auditionee.auditioneeNumber} style={{ borderBottom: "1px solid #ddd", padding: "15px" }}>
+            <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
               <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
               <p><strong>Name:</strong> {auditionee.name}</p>
               <p><strong>Email:</strong> {auditionee.email}</p>
@@ -112,10 +113,10 @@ export default function Audition() {
               <label>
                 <strong>Score:</strong>
                 <input
-                  type="number"
+                  type='text'
                   value={auditionee.score || ""}
                   onChange={(e) => handleScoreSubmit(auditionee.auditioneeNumber, e.target.value)}
-                  style={{ marginLeft: "10px", padding: "5px", fontSize: "16px", width: "80px" }}
+                  className={styles.judge_input}
                 />
               </label>
             </div>

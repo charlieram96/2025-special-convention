@@ -2,6 +2,10 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
+import styles from './Rsvp-audition.module.css';
+
+import logo from '../../public/fort-lauderdale-2025-logo.svg'
+
 function RsvpAuditionContent() {
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
@@ -87,17 +91,49 @@ function RsvpAuditionContent() {
   }
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>RSVP for the Event</h1>
-      <p>{message}</p>
-      <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "0 auto" }}>
-        <input type="text" name="ticketId" value={formData.ticketId} readOnly /><br />
-        <input type="text" name="name" value={formData.name} readOnly /><br />
-        <input type="email" name="email" value={formData.email} readOnly /><br />
-        <input type="text" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} /><br />
-        <input type="text" name="guestName" placeholder="Guest Name" onChange={handleChange} /><br />
-        <input type="email" name="guestEmail" placeholder="Guest Email" onChange={handleChange} /><br />
-        <button type="submit">Confirm RSVP</button>
+    <div style={{ textAlign: "center", marginTop: "30px" }} className={styles.page_wrap}>
+      <img src={logo.src} alt="" className={styles.logo} />
+      <h1 style={{marginTop: '30px'}}>Welcome</h1>
+      <p>Please RSVP for the auditions using the form below</p>
+      {message ? <p className={styles.result_message}>{message}</p> : <></>}
+      <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "40px 0 100px 0", display: "flex", flexDirection: "column", gap: "30px", width: "100%", alignItems: "center"}}>
+        <div className={styles.input_wrap}>
+          <input type="text" name="ticketId" value={formData.ticketId} readOnly />
+          <div className={styles.input_desc}>
+            Ticket ID *
+          </div>
+        </div>
+        <div className={styles.input_wrap}>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} />
+          <div className={styles.input_desc}>
+            Name *
+          </div>
+        </div>
+        <div className={styles.input_wrap}>
+          <input type="email" name="email" value={formData.email} onChange={handleChange} />
+          <div className={styles.input_desc}>
+            Email *
+          </div>
+        </div>
+        <div className={styles.input_wrap}>
+          <input type="text" name="phoneNumber" placeholder="" value={formData.phoneNumber} onChange={handleChange} />
+          <div className={styles.input_desc}>
+            Phone Number
+          </div>
+        </div>
+        <div className={styles.input_wrap}>
+          <input type="text" name="guestName" placeholder="" onChange={handleChange} />
+          <div className={styles.input_desc}>
+            Guest Name
+          </div>
+        </div>
+        <div className={styles.input_wrap}>
+          <input type="email" name="guestEmail" placeholder="" onChange={handleChange} />
+          <div className={styles.input_desc}>
+            Guest Email
+          </div>
+        </div>
+        <button type="submit" className={styles.rsvp_button}>Confirm RSVP</button>
       </form>
     </div>
   );

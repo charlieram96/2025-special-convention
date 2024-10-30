@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from 'react';
+import styles from './page.module.css';
+
+import logo from '../public/fort-lauderdale-2025-logo.svg'
 
 export default function Send() {
   const [isSending, setIsSending] = useState(false);
@@ -55,13 +58,17 @@ export default function Send() {
   };
 
   return (
-    <div>
-      <h1>Send Test Email</h1>
+    <div className={styles.page_wrap}>
+      <img src={logo.src} className={styles.logo} alt="logo" />
+      <h1>Send audition invite email</h1>
       <button onClick={sendTestEmail} disabled={isSending}>
         {isSending ? 'Sending...' : 'Send Email'}
       </button>
       {message && <p>{message}</p>}
-
+      
+      <h1>
+        Send audition result email
+      </h1>
       <button
         onClick={handleSendResultsEmails}
         style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}

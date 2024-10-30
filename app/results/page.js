@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
+import styles from './Results.module.css';
+
 
 export default function Results() {
   const [auditionList, setAuditionList] = useState([]);
@@ -52,14 +54,14 @@ export default function Results() {
   };
 
   return (
-    <div style={{ textAlign: "center", margin: "20px" }}>
+    <div style={{ textAlign: "center", margin: "20px" }} className={styles.results_wrap}>
       <h1>Audition Results</h1>
       {loading ? (
         <p>Loading audition data...</p>
       ) : (
         <div>
           {auditionList.map((auditionee) => (
-            <div key={auditionee.auditioneeNumber} style={{ borderBottom: "1px solid #ddd", padding: "15px" }}>
+            <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
               <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
               <p><strong>Name:</strong> {auditionee.name}</p>
               <p><strong>Email:</strong> {auditionee.email}</p>
@@ -75,8 +77,8 @@ export default function Results() {
                       fontSize: "16px",
                       margin: "5px",
                       backgroundColor:
-                        auditionee.result === option ? "#007BFF" : "#ddd",
-                      color: auditionee.result === option ? "#fff" : "#000",
+                        auditionee.result === option ? "#0088AD" : "#addbe3",
+                      color: auditionee.result === option ? "#fff" : "#fff",
                       border: "none",
                       borderRadius: "5px",
                       cursor: "pointer",

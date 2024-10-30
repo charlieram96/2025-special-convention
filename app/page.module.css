@@ -1,3 +1,31 @@
+.page_wrap {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
 .logo {
-  
+    height: 300px;
+    margin-top: 50px;
+}
+
+.page_wrap h1 {
+    margin-top: 50px;
+}
+
+.page_wrap button {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+    background-color: #F5A343;
+    color: #fff;
+    font-weight: 700;
+    width: min(300px, 100%) !important;
+    border: none;
+    cursor: pointer;
+    padding: 13px !important;
+    font-size: 16px;
+
 }

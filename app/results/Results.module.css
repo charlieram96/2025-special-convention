@@ -1,0 +1,14 @@
+.results_wrap {
+    background-color: #E8FCFF;
+    padding-top: 100px;
+}
+
+.auditionee {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    border-bottom: 1px solid #87dbe8;
+    padding: 30px 20px;
+}
+
