@@ -22,59 +22,64 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+    if (req.method !== 'POST') {
+      return res.status(405).json({ success: false, message: 'Method not allowed' });
+    }
+  
+    const form = formidable({
+      maxFileSize: 5 * 1024 * 1024, // 5 MB
+      keepExtensions: true,
+      multiples: false,
+    });
+  
+    let auditioneeId = '';
+    let file;
+  
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        console.error('Form parsing error:', err);
+        return res.status(500).json({ success: false, message: 'Form parsing error' });
+      }
+  
+      auditioneeId = fields.auditioneeId;
+      file = files.file;
+  
+      if (!file || !auditioneeId) {
+        return res.status(400).json({ success: false, message: 'Missing file or auditioneeId' });
+      }
+  
+      try {
+        const filePath = file.filepath || file.path;
+        if (!filePath) {
+          throw new Error('File path is undefined');
+        }
+  
+        const fileStream = fs.createReadStream(filePath);
+  
+        const params = {
+          Bucket: process.env.AWS_S3_BUCKET_NAME,
+          Key: `auditionees/${auditioneeId}-${Date.now()}${path.extname(file.originalFilename)}`,
+          Body: fileStream,
+          ContentType: file.mimetype,
+          ACL: 'public-read',
+        };
+  
+        const uploadResult = await s3.upload(params).promise();
+        const imageUrl = uploadResult.Location;
+  
+        await updateGoogleSheet(auditioneeId, imageUrl);
+  
+        // Clean up the temporary file
+        fs.unlinkSync(filePath);
+  
+        res.status(200).json({ success: true, imageUrl });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ success: false, message: 'Error uploading image' });
+      }
+    });
   }
-
-  // Initialize formidable form
-  const form = formidable({
-    maxFileSize: 5 * 1024 * 1024, // 5 MB
-    keepExtensions: true, // Preserve file extensions
-  });
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error('Formidable parsing error:', err);
-      return res.status(500).json({ success: false, message: 'Form parsing error' });
-    }
-
-    const auditioneeId = fields.auditioneeId;
-    const file = files.file;
-
-    if (!file || !auditioneeId) {
-      return res.status(400).json({ success: false, message: 'Missing file or auditioneeId' });
-    }
-
-    try {
-      // Read the file from the temporary path
-      const filePath = file.filepath || file.path; // For compatibility
-      const fileContent = fs.readFileSync(filePath);
-
-      // Upload to S3
-      const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: `auditionees/${auditioneeId}-${Date.now()}${path.extname(file.originalFilename)}`,
-        Body: fileContent,
-        ContentType: file.mimetype,
-        ACL: 'public-read',
-      };
-
-      const uploadResult = await s3.upload(params).promise();
-      const imageUrl = uploadResult.Location;
-
-      // Update Google Sheet
-      await updateGoogleSheet(auditioneeId, imageUrl);
-
-      // Clean up the temporary file
-      fs.unlinkSync(filePath);
-
-      res.status(200).json({ success: true, imageUrl });
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      res.status(500).json({ success: false, message: 'Error uploading image' });
-    }
-  });
-}
+  
 
 async function updateGoogleSheet(auditioneeId, imageUrl) {
   const client = new google.auth.JWT(
