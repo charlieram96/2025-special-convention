@@ -8,6 +8,7 @@ export default function Audition() {
   const [searchTerm, setSearchTerm] = useState("");
   const [uploadingId, setUploadingId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
   const [filterTypes, setFilterTypes] = useState({
     Vocals: false,
     Instrument: false,
@@ -18,7 +19,7 @@ export default function Audition() {
     const file = e.target.files[0];
     if (!file) return;
 
-    setLoading(true);
+    setImageLoading(true);
     setUploadingId(auditionee.id);
 
     // Create FormData for image file
@@ -41,7 +42,7 @@ export default function Audition() {
     } catch (error) {
       console.error('Error uploading image:', error);
     } finally {
-      setLoading(false);
+      setImageLoading(false);
       setUploadingId(null);
     }
   };
