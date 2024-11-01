@@ -6,6 +6,11 @@ import styles from './Audition.module.css';
 import profileBlank from '../../public/blank-profile.jpg';
 import uploadIcon from '../../public/upload-icon.svg';
 import logo from '../../public/fort-lauderdale-2025-logo.svg';
+import saveIcon from '../../public/save-icon.svg';
+
+// Import ToastContainer and toast
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Audition() {
   const [auditionList, setAuditionList] = useState([]);
@@ -29,12 +34,13 @@ export default function Audition() {
       });
       const data = await response.json();
       if (data.success) {
-        alert(`Data saved successfully for auditionee ${auditionee.auditioneeNumber}`);
+        toast.success(`Data saved successfully for auditionee ${auditionee.auditioneeNumber}`);
       } else {
-        alert(`Failed to save data for auditionee ${auditionee.auditioneeNumber}`);
+        toast.error(`Failed to save data for auditionee ${auditionee.auditioneeNumber}`);
       }
     } catch (error) {
       console.error("Error saving auditionee data:", error);
+      toast.error(`An error occurred while saving data for auditionee ${auditionee.auditioneeNumber}.`);
     }
   };
 
@@ -68,7 +74,7 @@ export default function Audition() {
       const data = await response.json();
 
       if (data.success) {
-        alert(`Image uploaded successfully for auditionee ${auditioneeNumber}`);
+        toast.success(`Image uploaded successfully for auditionee ${auditioneeNumber}`);
         // Update the auditionList state to reflect the new image URL
         setAuditionList(prevList =>
           prevList.map(auditionee =>
@@ -78,11 +84,11 @@ export default function Audition() {
           )
         );
       } else {
-        alert(`Failed to upload image for auditionee ${auditioneeNumber}`);
+        toast.error(`Failed to upload image for auditionee ${auditioneeNumber}`);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert(`Failed to upload image for auditionee ${auditioneeNumber}`);
+      toast.error(`Failed to upload image for auditionee ${auditioneeNumber}`);
     } finally {
       setUploadingId(null);
       e.target.value = null;
@@ -112,6 +118,7 @@ export default function Audition() {
       } catch (error) {
         console.error("Error fetching audition data:", error);
         setLoading(false);
+        toast.error("Failed to fetch audition data.");
       }
     };
     fetchData();
@@ -174,7 +181,10 @@ export default function Audition() {
         <div>
           {filteredList.map((auditionee) => (
             <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
-              <button onClick={() => handleSave(auditionee)}>Save</button>
+              <button className={styles.save_button} onClick={() => handleSave(auditionee)}>
+                <img src={saveIcon.src} alt="save icon" />
+                Save
+              </button>
 
               <div className={styles.profile_image_wrap}>
                 {auditionee.imageLink ? (
@@ -349,6 +359,8 @@ export default function Audition() {
           ))}
         </div>
       )}
+      {/* Include the ToastContainer */}
+      <ToastContainer />
     </div>
   );
 }

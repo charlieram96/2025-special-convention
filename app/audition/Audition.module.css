@@ -21,7 +21,8 @@
     color: var(--foreground);
     margin-bottom: 20px;
     text-align: center;
-    font-weight: 500;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 600;
 }
 
 .audition_search::placeholder {
@@ -265,3 +266,30 @@
     opacity: 0.3;
 }
   
+.save_button {
+    position: absolute;
+    top: 0;
+    border: none;
+    right: 0;
+    height: 100%;
+    width: 90px;
+    background-color: #82ec90;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .3s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+}
+
+.save_button img {
+    height: 30px;
+}
+
+.save_button:hover {
+    background-color: #75da82;
+}
