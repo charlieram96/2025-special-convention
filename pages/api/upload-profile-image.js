@@ -64,26 +64,38 @@ async function updateGoogleSheet(auditioneeId, imageUrl) {
 }
 
 export default async function handler(req, res) {
-  const form = formidable({ multiples: false });
-
-  form.parse(req, async (err, fields, files) => {
-    if (err) return res.status(500).json({ success: false, message: 'Form parsing error' });
-
-    const auditioneeId = fields.auditioneeId;
-    const file = files.file;
-
-    if (!file || !auditioneeId) {
-      return res.status(400).json({ success: false, message: 'Missing file or auditioneeId' });
-    }
-
-    try {
-      const imageUrl = await uploadImageToS3(file, auditioneeId);
-      await updateGoogleSheet(auditioneeId, imageUrl);
-
-      res.status(200).json({ success: true, imageUrl });
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      res.status(500).json({ success: false, message: 'Error uploading image' });
-    }
-  });
-}
+    const form = formidable({ multiples: false });
+  
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        console.error('Form parsing error:', err);
+        return res.status(500).json({ success: false, message: 'Form parsing error' });
+      }
+  
+      const auditioneeId = fields.auditioneeId;
+      const file = files.file;
+  
+      if (!file || !auditioneeId) {
+        return res.status(400).json({ success: false, message: 'Missing file or auditioneeId' });
+      }
+  
+      try {
+        // Check if the file has a valid path
+        const filePath = file.filepath || file.path; // Some versions of formidable use `path` instead of `filepath`
+        if (!filePath) {
+          throw new Error("File path is undefined");
+        }
+  
+        // Read the file stream and upload it to S3
+        const fileStream = fs.createReadStream(filePath);
+        const imageUrl = await uploadImageToS3(fileStream, auditioneeId);
+        await updateGoogleSheet(auditioneeId, imageUrl);
+  
+        res.status(200).json({ success: true, imageUrl });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ success: false, message: 'Error uploading image' });
+      }
+    });
+  }
+  
