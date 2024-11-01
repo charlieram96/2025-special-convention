@@ -6,6 +6,7 @@ import styles from './Audition.module.css';
 export default function Audition() {
   const [auditionList, setAuditionList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [uploadingId, setUploadingId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filterTypes, setFilterTypes] = useState({
     Vocals: false,
