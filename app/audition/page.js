@@ -149,24 +149,20 @@ export default function Audition() {
               {auditionee.imageLink && (
                 <img src={auditionee.imageLink} alt={`${auditionee.name}'s image`} style={{ width: '150px', height: 'auto' }} />
               )}
-              <div>
-                <label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={e => handleImageUpload(e, auditionee.auditioneeNumber)}
-                    style={{ display: 'none' }}
-                  />
-                  <button
-                    onClick={e => e.target.previousSibling.click()}
-                    disabled={uploadingId === auditionee.auditioneeNumber}
-                  >
-                    {uploadingId === auditionee.auditioneeNumber ? 'Uploading...' : 'Upload Image'}
-                  </button>
-                </label>
-              </div>
-            </div>
-          ))}
+              <label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => handleImageUpload(e, auditionee.auditioneeNumber)}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  onClick={e => e.target.previousSibling.click()}
+                  disabled={uploadingId === auditionee.auditioneeNumber}
+                >
+                  {uploadingId === auditionee.auditioneeNumber ? 'Uploading...' : 'Upload Image'}
+                </button>
+              </label>
               <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
               <p><strong>Name:</strong> {auditionee.name}</p>
               <p><strong>Email:</strong> {auditionee.email}</p>
