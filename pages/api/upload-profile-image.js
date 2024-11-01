@@ -4,6 +4,7 @@ import { google } from 'googleapis';
 import formidable from 'formidable';
 import fs from 'fs';
 
+// AWS S3 Configuration
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -14,7 +15,7 @@ const s3 = new AWS.S3();
 
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, // Disables Next.js' default body parser to handle file uploads with formidable
   },
 };
 
@@ -63,7 +64,7 @@ async function updateGoogleSheet(auditioneeId, imageUrl) {
 }
 
 export default async function handler(req, res) {
-  const form = new formidable.IncomingForm();
+  const form = formidable({ multiples: false });
 
   form.parse(req, async (err, fields, files) => {
     if (err) return res.status(500).json({ success: false, message: 'Form parsing error' });
