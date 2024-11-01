@@ -15,17 +15,15 @@ export default function Audition() {
     Dance: false,
   });
 
-  const handleImageUpload = async (e, auditionee) => {
+  const handleImageUpload = async (e, auditioneeNumber) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setImageLoading(true);
-    setUploadingId(auditionee.id);
+    setUploadingId(auditioneeNumber);
 
-    // Create FormData for image file
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('auditioneeId', auditionee.id);
+    formData.append('auditioneeId', auditioneeNumber);
 
     try {
       const response = await fetch('/api/upload-profile-image', {
@@ -33,19 +31,27 @@ export default function Audition() {
         body: formData,
       });
       const data = await response.json();
-      
+
       if (data.success) {
-        alert(`Image uploaded successfully for ${auditionee.name}`);
+        alert(`Image uploaded successfully for auditionee ${auditioneeNumber}`);
+        // Optionally, update the auditionList state to reflect the new image URL
+        setAuditionList(prevList =>
+          prevList.map(auditionee =>
+            auditionee.auditioneeNumber === auditioneeNumber
+              ? { ...auditionee, imageLink: data.imageUrl }
+              : auditionee
+          )
+        );
       } else {
-        alert(`Failed to upload image for ${auditionee.name}`);
+        alert(`Failed to upload image for auditionee ${auditioneeNumber}`);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
     } finally {
-      setImageLoading(false);
       setUploadingId(null);
     }
   };
+
 
   // Fetch data from the Google Sheet on page load
   useEffect(() => {
@@ -140,20 +146,27 @@ export default function Audition() {
         <div>
           {filteredList.map((auditionee) => (
             <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
-              {auditionee.imageLink && <img src={auditionee.imageLink} alt={`${auditionee.name}'s image`} />}
-              <label className={styles.uploadLabel}>
-                {uploadingId === auditionee.id ? (
-                  <span>Uploading...</span>
-                ) : (
-                  <span>Upload Image</span>
-                )}
-                <input
-                  type="file"
-                  onChange={(e) => handleImageUpload(e, auditionee)}
-                  className={styles.uploadInput}
-                  disabled={imageLoading && uploadingId === auditionee.id}
-                />
-              </label>
+              {auditionee.imageLink && (
+                <img src={auditionee.imageLink} alt={`${auditionee.name}'s image`} style={{ width: '150px', height: 'auto' }} />
+              )}
+              <div>
+                <label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => handleImageUpload(e, auditionee.auditioneeNumber)}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    onClick={e => e.target.previousSibling.click()}
+                    disabled={uploadingId === auditionee.auditioneeNumber}
+                  >
+                    {uploadingId === auditionee.auditioneeNumber ? 'Uploading...' : 'Upload Image'}
+                  </button>
+                </label>
+              </div>
+            </div>
+          ))}
               <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
               <p><strong>Name:</strong> {auditionee.name}</p>
               <p><strong>Email:</strong> {auditionee.email}</p>
