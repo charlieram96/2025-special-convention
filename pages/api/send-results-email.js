@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     // Fetch Audition List
     const auditionListOpt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Audition List!A:G", // Assuming result is in Column G
+      range: "Audition List!A:O", // Assuming result is in Column O
     };
     const auditionData = await gsapi.spreadsheets.values.get(auditionListOpt);
     const rows = auditionData.data.values;
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
 
     const selectedListUpdates = [];
     for (const row of rows.slice(1)) {
-      const [name, email, , ticketId, , , result] = row;
+      const [name, email, , ticketId, , , , , , , , , , , result] = row;
 
       if (result === "Accept") {
         const newTicketId = generateTicketId();

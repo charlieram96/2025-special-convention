@@ -95,7 +95,7 @@ async function updateGoogleSheet(auditioneeId, imageUrl) {
   // Fetch the sheet data to find the row index
   const opt = {
     spreadsheetId: '1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4',
-    range: 'Audition List!A:K',
+    range: 'Audition List!A:G',
   };
 
   const sheetData = await gsapi.spreadsheets.values.get(opt);
@@ -109,7 +109,7 @@ async function updateGoogleSheet(auditioneeId, imageUrl) {
   }
 
   // Update Column K (index 10, since columns are zero-indexed)
-  const updateRange = `Audition List!K${rowIndex + 1}`;
+  const updateRange = `Audition List!G${rowIndex + 1}`;
 
   await gsapi.spreadsheets.values.update({
     spreadsheetId: '1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4',

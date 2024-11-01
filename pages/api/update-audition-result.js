@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Audition List!A:G", // Adjusted to cover all columns including "Result"
+      range: "Audition List!A:O", // Adjusted to cover all columns including "Result"
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);
@@ -35,10 +35,10 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "Auditionee not found" });
     }
 
-    // Update the Result column (Column G) for the specific row
+    // Update the Result column (Column O) for the specific row
     await gsapi.spreadsheets.values.update({
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: `Audition List!G${rowIndex + 1}`,
+      range: `Audition List!O${rowIndex + 1}`,
       valueInputOption: "RAW",
       resource: { values: [[result]] },
     });

@@ -1,7 +1,14 @@
+.main_logo {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    height: 150px;
+}
 
 .audition_wrap {
     background-color: #E8FCFF;
-    padding-top: 100px;
+    padding: 0;
+    padding-top: 150px;
 }
 
 .audition_search {
@@ -38,12 +45,68 @@
 }
 
 .auditionee {
+    position: relative;
+    width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    padding: 70px 25px 25px 25px;
+    background-color: #fff;
+    border-bottom: 1.5px solid #caedf1;
+    border-top: 1.5px solid #caedf1;
+    margin-bottom: 40px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.auditionee input {
+    display: inline-block;
+    margin-left: 5px;
+    justify-content: center;
     align-items: center;
-    border-bottom: 1px solid #87dbe8;
-    padding: 30px 20px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    color: var(--foreground);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.auditionee_main_col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    margin-left: 50px;
+}
+
+.upload_button {
+    background-color: #E8FCFF;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1.5px solid #C4EBF5;
+    margin-top: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+    gap: 5px;
+    transition: .3s ease-out;
+}
+
+.upload_button:hover {
+    background-color: #def3f6;
+}
+
+.upload_button img {
+    height: 15px;
 }
 
 .auditionee label {
@@ -51,17 +114,143 @@
     align-items: center;
 }
 
-.judge_input {
-    background-color: #fff;
-    color: var(--foreground);
-    border: none;
-    outline: none;
-    width: 80px;
+.audition_type {
+    position: absolute;
+    left: 25px;
+    top: 15px;
+}
+
+.input_mimic {
+    display: inline-block;
+    margin-left: 5px;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    padding: 5px 10px;
+}
+
+.auditionee_number input {
+    width: 70px;
+}
+
+.auditionee_name input {
+    width: 200px;
+}
+
+.congregation input {
+    width: 100%;
+}
+
+.congregation {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.observations {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+}
+
+.observations textarea {
+    width: 100%;
+    height: 115px;
     padding: 10px;
-    font-size: 18px;
-    margin-left: 10px;
-    font-weight: 600;
-    border-radius: 5px;
-    border: 1px solid #addae1;
-    text-align: center;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    color: var(--foreground);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.col_type {
+    font-weight: 700;    
+    position: relative;
+    top: -30px;
+}
+
+.auditionee_vocals_col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-left: 75px;
+    padding-left: 75px;
+}
+
+.auditionee_vocals_col:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 220px;
+    width: 1px;
+    background-color: #0088AD;
+}
+
+.auditionee_vocals_col div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.auditionee_vocals_col input {
+    width: 80px;
+}
+
+.category {
+    width: 80px;
+}
+
+.rov {
+    position: relative;
+}
+
+.rov_low {
+    position: absolute;
+    font-size: 9px;
+    bottom: -5px;
+}
+
+.auditionee_instrument_col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-left: 75px;
+    padding-left: 75px;
+}
+
+.auditionee_instrument_col:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 220px;
+    width: 1px;
+    background-color: #0088AD;
+}
+
+.auditionee_instrument_col div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.auditionee_instrument_col input {
+    width: 80px;
+}
+
+.instrument_category {
+    width: 90px;
+}
+
+.instrument_input {
+    width: 180px !important;
 }
