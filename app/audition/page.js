@@ -151,7 +151,7 @@ export default function Audition() {
                   type="file"
                   onChange={(e) => handleImageUpload(e, auditionee)}
                   className={styles.uploadInput}
-                  disabled={loading && uploadingId === auditionee.id}
+                  disabled={imageLoading && uploadingId === auditionee.id}
                 />
               </label>
               <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
