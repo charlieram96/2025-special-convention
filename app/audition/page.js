@@ -5,9 +5,7 @@ import styles from './Audition.module.css';
 
 import profileBlank from '../../public/blank-profile.jpg';
 import uploadIcon from '../../public/upload-icon.svg';
-import logo from '../../public/fort-lauderdale-2025-logo.svg'
-
-
+import logo from '../../public/fort-lauderdale-2025-logo.svg';
 
 export default function Audition() {
   const [auditionList, setAuditionList] = useState([]);
@@ -71,7 +69,7 @@ export default function Audition() {
 
       if (data.success) {
         alert(`Image uploaded successfully for auditionee ${auditioneeNumber}`);
-        // Optionally, update the auditionList state to reflect the new image URL
+        // Update the auditionList state to reflect the new image URL
         setAuditionList(prevList =>
           prevList.map(auditionee =>
             auditionee.auditioneeNumber === auditioneeNumber
@@ -85,33 +83,13 @@ export default function Audition() {
     } catch (error) {
       console.error('Error uploading image:', error);
       alert(`Failed to upload image for auditionee ${auditioneeNumber}`);
-
     } finally {
       setUploadingId(null);
       e.target.value = null;
     }
-
-
   };
 
-
   // Fetch data from the Google Sheet on page load
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("/api/get-audition-list");
-  //       const data = await response.json();
-  //       setAuditionList(data.auditionList || []);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.error("Error fetching audition data:", error);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -138,7 +116,6 @@ export default function Audition() {
     };
     fetchData();
   }, []);
-  
 
   // Toggle filter type
   const toggleFilter = (type) => {
@@ -147,26 +124,6 @@ export default function Audition() {
       [type]: !prevTypes[type],
     }));
   };
-
-  // Handle score update submission
-  // const handleScoreSubmit = async (auditioneeNumber, score) => {
-  //   try {
-  //     await fetch("/api/update-audition-score", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ auditioneeNumber, score }),
-  //     });
-  //     setAuditionList((prevList) =>
-  //       prevList.map((auditionee) =>
-  //         auditionee.auditioneeNumber === auditioneeNumber
-  //           ? { ...auditionee, score }
-  //           : auditionee
-  //       )
-  //     );
-  //   } catch (error) {
-  //     console.error("Error updating score:", error);
-  //   }
-  // };
 
   // Filter auditionees based on search term and selected types
   const filteredList = auditionList.filter((auditionee) => {
@@ -188,7 +145,7 @@ export default function Audition() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className={styles.audition_search}
       />
-  
+
       {/* Filter Buttons */}
       <div style={{ marginBottom: "20px" }} className={styles.filter_buttons}>
         {["Vocals", "Instrument", "Dance"].map((type) => (
@@ -210,7 +167,7 @@ export default function Audition() {
           </button>
         ))}
       </div>
-  
+
       {loading ? (
         <p>Loading audition data...</p>
       ) : (
@@ -218,7 +175,7 @@ export default function Audition() {
           {filteredList.map((auditionee) => (
             <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
               <button onClick={() => handleSave(auditionee)}>Save</button>
-  
+
               <div className={styles.profile_image_wrap}>
                 {auditionee.imageLink ? (
                   <img
@@ -253,12 +210,12 @@ export default function Audition() {
                   </button>
                 </label>
               </div>
-  
+
               <div className={styles.audition_type}>
                 Auditioning for:{" "}
                 <span className={styles.input_mimic}>{auditionee.auditionType}</span>
               </div>
-  
+
               <div className={styles.auditionee_main_col}>
                 <div className={styles.row}>
                   <div className={styles.auditionee_number}>
@@ -267,9 +224,6 @@ export default function Audition() {
                       type="text"
                       value={auditionee.auditioneeNumber}
                       readOnly
-                      // onChange={(e) =>
-                      //   handleInputChange(e, auditionee.auditioneeNumber, "auditioneeNumber")
-                      // }
                     />
                   </div>
                   <div className={styles.auditionee_name}>
@@ -301,97 +255,100 @@ export default function Audition() {
                   />
                 </div>
               </div>
-  
+
               {/* Vocals Section */}
-              {auditionee.auditionType === "Vocals" && (
-                <div className={styles.auditionee_vocals_col}>
-                  <div className={styles.col_type}>Vocals</div>
-                  <div>
-                    <div className={styles.category}>Pitch:</div>
-                    <input
-                      type="text"
-                      value={auditionee.pitch || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "pitch")
-                      }
-                    />
-                  </div>
-                  <div>
-                    <div className={styles.category}>Rhythm:</div>
-                    <input
-                      type="text"
-                      value={auditionee.rhythm || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "rhythm")
-                      }
-                    />
-                  </div>
-                  <div className={styles.rov}>
-                    <div className={styles.category}>ROV:</div>
-                    <input
-                      type="text"
-                      value={auditionee.rangeOfVoice || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "rangeOfVoice")
-                      }
-                    />
-                    <div className={styles.rov_low}>(Range of voice)</div>
-                  </div>
-                  <div>
-                    <div className={styles.category}>Harmony:</div>
-                    <input
-                      type="text"
-                      value={auditionee.harmony || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "harmony")
-                      }
-                    />
-                  </div>
+              <div
+                className={`${styles.auditionee_vocals_col} ${
+                  auditionee.auditionType !== "Vocals" ? styles.reducedOpacity : ""
+                }`}
+              >
+                <div className={styles.col_type}>Vocals</div>
+                <div>
+                  <div className={styles.category}>Pitch:</div>
+                  <input
+                    type="text"
+                    value={auditionee.pitch || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "pitch")
+                    }
+                  />
                 </div>
-              )}
-  
+                <div>
+                  <div className={styles.category}>Rhythm:</div>
+                  <input
+                    type="text"
+                    value={auditionee.rhythm || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "rhythm")
+                    }
+                  />
+                </div>
+                <div className={styles.rov}>
+                  <div className={styles.category}>ROV:</div>
+                  <input
+                    type="text"
+                    value={auditionee.rangeOfVoice || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "rangeOfVoice")
+                    }
+                  />
+                  <div className={styles.rov_low}>(Range of voice)</div>
+                </div>
+                <div>
+                  <div className={styles.category}>Harmony:</div>
+                  <input
+                    type="text"
+                    value={auditionee.harmony || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "harmony")
+                    }
+                  />
+                </div>
+              </div>
+
               {/* Instrument Section */}
-              {auditionee.auditionType === "Instrument" && (
-                <div className={styles.auditionee_instrument_col}>
-                  <div className={styles.col_type}>Instrument</div>
-                  <div>
-                    <div className={styles.instrument_category}>Instrument:</div>
-                    <input
-                      type="text"
-                      className={styles.instrument_input}
-                      value={auditionee.instrument || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "instrument")
-                      }
-                    />
-                  </div>
-                  <div>
-                    <div className={styles.instrument_category}>Reading:</div>
-                    <input
-                      type="text"
-                      value={auditionee.reading || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "reading")
-                      }
-                    />
-                  </div>
-                  <div>
-                    <div className={styles.instrument_category}>Level:</div>
-                    <input
-                      type="text"
-                      value={auditionee.level || ""}
-                      onChange={(e) =>
-                        handleInputChange(e, auditionee.auditioneeNumber, "level")
-                      }
-                    />
-                  </div>
+              <div
+                className={`${styles.auditionee_instrument_col} ${
+                  auditionee.auditionType !== "Instrument" ? styles.reducedOpacity : ""
+                }`}
+              >
+                <div className={styles.col_type}>Instrument</div>
+                <div>
+                  <div className={styles.instrument_category}>Instrument:</div>
+                  <input
+                    type="text"
+                    className={styles.instrument_input}
+                    value={auditionee.instrument || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "instrument")
+                    }
+                  />
                 </div>
-              )}
+                <div>
+                  <div className={styles.instrument_category}>Reading:</div>
+                  <input
+                    type="text"
+                    value={auditionee.reading || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "reading")
+                    }
+                  />
+                </div>
+                <div>
+                  <div className={styles.instrument_category}>Level:</div>
+                  <input
+                    type="text"
+                    value={auditionee.level || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "level")
+                    }
+                  />
+                </div>
+              </div>
             </div>
           ))}
         </div>
       )}
     </div>
   );
-  
 }
