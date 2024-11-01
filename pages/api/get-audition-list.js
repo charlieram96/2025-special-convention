@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Audition List!A:G", // Adjust as necessary
+      range: "Audition List!A:K", // Adjust as necessary
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);

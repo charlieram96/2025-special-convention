@@ -13,6 +13,38 @@ export default function Audition() {
     Dance: false,
   });
 
+  const handleImageUpload = async (e, auditionee) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    setUploadingId(auditionee.id);
+
+    // Create FormData for image file
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('auditioneeId', auditionee.id);
+
+    try {
+      const response = await fetch('/api/upload-profile-image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        alert(`Image uploaded successfully for ${auditionee.name}`);
+      } else {
+        alert(`Failed to upload image for ${auditionee.name}`);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setLoading(false);
+      setUploadingId(null);
+    }
+  };
+
   // Fetch data from the Google Sheet on page load
   useEffect(() => {
     const fetchData = async () => {
@@ -106,6 +138,20 @@ export default function Audition() {
         <div>
           {filteredList.map((auditionee) => (
             <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
+              {auditionee.imageLink && <img src={auditionee.imageLink} alt={`${auditionee.name}'s image`} />}
+              <label className={styles.uploadLabel}>
+                {uploadingId === auditionee.id ? (
+                  <span>Uploading...</span>
+                ) : (
+                  <span>Upload Image</span>
+                )}
+                <input
+                  type="file"
+                  onChange={(e) => handleImageUpload(e, auditionee)}
+                  className={styles.uploadInput}
+                  disabled={loading && uploadingId === auditionee.id}
+                />
+              </label>
               <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
               <p><strong>Name:</strong> {auditionee.name}</p>
               <p><strong>Email:</strong> {auditionee.email}</p>
