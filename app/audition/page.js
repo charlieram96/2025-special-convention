@@ -134,10 +134,21 @@ export default function Audition() {
 
   // Filter auditionees based on search term and selected types
   const filteredList = auditionList.filter((auditionee) => {
-    const matchesSearch = auditionee.auditioneeNumber.includes(searchTerm);
+    // Parse the searchTerm into an array of trimmed search terms
+    const searchTerms = searchTerm
+      .split(',')
+      .map(term => term.trim())
+      .filter(term => term !== '');
+  
+    // Check if auditioneeNumber matches any of the search terms
+    const matchesSearch =
+      searchTerms.length === 0 || // If no search term, match all
+      searchTerms.some(term => auditionee.auditioneeNumber.includes(term));
+  
     const matchesType =
       Object.values(filterTypes).some(Boolean) === false ||
       filterTypes[auditionee.auditionType];
+  
     return matchesSearch && matchesType;
   });
 
