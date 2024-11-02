@@ -105,6 +105,7 @@
     cursor: pointer;
     border-radius: 4px;
     gap: 5px;
+    color: var(--foreground);
     transition: .3s ease-out;
 }
 
