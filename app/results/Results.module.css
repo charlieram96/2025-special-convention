@@ -1,14 +1,266 @@
-.results_wrap {
-    background-color: #E8FCFF;
-    padding-top: 100px;
+/* Reusing styles from Audition.module.css */
+
+/* Logo */
+.main_logo {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    height: 150px;
 }
 
-.auditionee {
+  .main_title {
+    margin-bottom: 30px;
+
+  }
+  
+  /* Main Container */
+  .results_wrap {
+    position: relative;
+    background-color: #E8FCFF;
+    padding: 0;
+    padding-top: 200px;
+}
+  
+  /* Auditionee Card */
+  .auditionee {
+    position: relative;
+    width: 100%;
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    align-items: center;
-    border-bottom: 1px solid #87dbe8;
-    padding: 30px 20px;
+    padding: 70px 25px 25px 25px;
+    background-color: #fff;
+    border-bottom: 1.5px solid #caedf1;
+    border-top: 1.5px solid #caedf1;
+    margin-bottom: 40px;
+    font-size: 14px;
+    font-weight: 600;
 }
+  
+  /* Profile Image */
+.profile_image_wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+.profile_image {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+  
+  /* Auditionee Information */
+.auditionee_info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    margin-left: 50px;
+}
+  
+  .row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .input_mimic {
+    display: inline-block;
+    margin-left: 5px;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    padding: 5px 10px;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--foreground);
+    text-align: left;
 
+  }
+  
+  .auditionee_number .input_mimic {
+    width: 70px;
+  }
+
+  .auditionee_name, .auditionee_number, .congregation, .audition_type  {
+    display: flex;
+    align-items: center;
+  }
+  
+  .audition_type {
+    position: absolute;
+    top: 20px;
+    left: 25px;
+  }
+
+  .auditionee_name .input_mimic {
+    width: 200px;
+  }
+
+  .auditionee_email .input_mimic {
+    width: 300px;
+    text-align: left;
+  }
+  
+  .congregation .input_mimic {
+    width: 220px;
+  }
+  
+  .observations {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .observations .input_mimic {
+    width: 100%;
+    height: 100px;
+  }
+
+  .instrument_input > .input_mimic {
+    width: 150px;
+  }
+  
+  .col_type {
+    font-weight: 700;
+    position: relative;
+    top: -20px;
+  }
+
+  .rov {
+    position: relative;
+  }
+
+  .rov_low {
+    position: absolute;
+    bottom: -6px;
+    font-size: 9px;
+  }
+
+  /* Vocals Section */
+  .auditionee_vocals_col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-left: 50px;
+    padding-left: 50px;
+  }
+  
+  .auditionee_vocals_col:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 220px;
+    width: 1px;
+    background-color: #0088AD;
+  }
+  
+  .auditionee_vocals_col div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .category {
+    width: 80px;
+  }
+  
+  /* Instrument Section */
+  .auditionee_instrument_col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-left: 50px;
+    padding-left: 50px;
+  }
+  
+  .auditionee_instrument_col:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 220px;
+    width: 1px;
+    background-color: #0088AD;
+  }
+  
+  .auditionee_instrument_col div {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .instrument_category {
+    width: 90px;
+  }
+  
+  /* Result Buttons */
+  .result_buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 80px;
+    background-color: #f5f9fc;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 100px;
+    border: 2px solid #d2f0f8;
+    border-radius: 5px;
+    padding: 30px;
+  }
+  
+  .result_button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #addbe3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .selected_button {
+    background-color: #0088AD;
+  }
+  
+  /* Adjustments for Loading State */
+  .result_button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  /* Filter Buttons Container */
+.filter_buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 50px;
+    margin-top: 15px;
+  }
+  
+  /* Filter Button */
+  .filter_button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #addbe3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Active Filter Button */
+  .active_button {
+    background-color: #0088AD;
+  }
+  

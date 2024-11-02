@@ -1,12 +1,15 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import styles from './Results.module.css';
-
+import logo from '../../public/fort-lauderdale-2025-logo.svg';
+import profileBlank from '../../public/blank-profile.jpg';
 
 export default function Results() {
   const [auditionList, setAuditionList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState({}); // Track loading state per auditionee
+  const [filterOption, setFilterOption] = useState("All"); // New filter state
 
   // Fetch audition list data
   useEffect(() => {
@@ -53,38 +56,135 @@ export default function Results() {
     }
   };
 
+  // Filtering the audition list based on the selected filter option
+  const filteredAuditionList = auditionList.filter((auditionee) => {
+    if (filterOption === "Completed") {
+      return auditionee.result && auditionee.result !== "";
+    } else if (filterOption === "Needs Input") {
+      return !auditionee.result || auditionee.result === "";
+    }
+    // "All" option
+    return true;
+  });
+
   return (
-    <div style={{ textAlign: "center", margin: "20px" }} className={styles.results_wrap}>
+    <div style={{ textAlign: "center" }}  className={styles.results_wrap}>
+      <img src={logo.src} className={styles.main_logo} alt="logo" />
       <h1>Audition Results</h1>
+
+      {/* Filter Buttons */}
+      <div className={styles.filter_buttons}>
+        {["All", "Completed", "Needs Input"].map((option) => (
+          <button
+            key={option}
+            onClick={() => setFilterOption(option)}
+            className={`${styles.filter_button} ${
+              filterOption === option ? styles.active_button : ""
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <p>Loading audition data...</p>
       ) : (
         <div>
-          {auditionList.map((auditionee) => (
+          {filteredAuditionList.map((auditionee) => (
             <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
-              <p><strong>Auditionee Number:</strong> {auditionee.auditioneeNumber}</p>
-              <p><strong>Name:</strong> {auditionee.name}</p>
-              <p><strong>Email:</strong> {auditionee.email}</p>
-              <p><strong>Score:</strong> {auditionee.score}</p>
-              <p><strong>Result:</strong> {auditionee.result || "No result set"}</p>
-              <div>
+              {/* Profile Image */}
+              <div className={styles.profile_image_wrap}>
+                {auditionee.imageLink ? (
+                  <img
+                    src={auditionee.imageLink}
+                    alt={`${auditionee.name}'s image`}
+                    className={styles.profile_image}
+                  />
+                ) : (
+                  <img
+                    src={profileBlank.src}
+                    alt="placeholder image"
+                    className={styles.profile_image}
+                  />
+                )}
+              </div>
+
+              {/* Auditionee Information */}
+              <div className={styles.auditionee_info}>
+                <div className={styles.row}>
+                  <div className={styles.auditionee_number}>
+                    Number:{" "}
+                    <span className={styles.input_mimic}>{auditionee.auditioneeNumber}</span>
+                  </div>
+                  <div className={styles.auditionee_name}>
+                    Name:{" "}
+                    <span className={styles.input_mimic}>{auditionee.name}</span>
+                  </div>
+                </div>
+                <div className={styles.audition_type}>
+                    Auditioning for:{" "}
+                    <span className={styles.input_mimic}>{auditionee.auditionType}</span>
+                </div>
+                <div className={styles.congregation}>
+                  Congregation:{" "}
+                  <span className={styles.input_mimic}>{auditionee.congregation || "N/A"}</span>
+                </div>
+                <div className={styles.observations}>
+                  <div>Observations:</div>
+                  <div className={styles.input_mimic}>{auditionee.observations || "N/A"}</div>
+                </div>
+              </div>
+
+              {/* Vocals Section */}
+              <div className={styles.auditionee_vocals_col}>
+                <div className={styles.col_type}>Vocals</div>
+                <div>
+                  <div className={styles.category}>Pitch:</div>
+                  <span className={styles.input_mimic}>{auditionee.pitch || "N/A"}</span>
+                </div>
+                <div>
+                  <div className={styles.category}>Rhythm:</div>
+                  <span className={styles.input_mimic}>{auditionee.rhythm || "N/A"}</span>
+                </div>
+                <div className={styles.rov}>
+                  <div className={styles.category}>ROV:</div>
+                  <span className={styles.input_mimic}>{auditionee.rangeOfVoice || "N/A"}</span>
+                  <div className={styles.rov_low}>(Range of voice)</div>
+                </div>
+                <div>
+                  <div className={styles.category}>Harmony:</div>
+                  <span className={styles.input_mimic}>{auditionee.harmony || "N/A"}</span>
+                </div>
+              </div>
+
+              {/* Instrument Section */}
+              <div className={styles.auditionee_instrument_col}>
+                <div className={styles.col_type}>Instrument</div>
+                <div className={styles.instrument_input}>
+                  <div className={styles.instrument_category}>Instrument:</div>
+                  <span className={styles.input_mimic}>{auditionee.instrument || "N/A"}</span>
+                </div>
+                <div>
+                  <div className={styles.instrument_category}>Reading:</div>
+                  <span className={styles.input_mimic}>{auditionee.reading || "N/A"}</span>
+                </div>
+                <div>
+                  <div className={styles.instrument_category}>Level:</div>
+                  <span className={styles.input_mimic}>{auditionee.level || "N/A"}</span>
+                </div>
+              </div>
+
+              {/* Result Buttons */}
+              <div className={styles.result_buttons}>
                 {["Accept", "Decline", "Backup"].map((option) => (
                   <button
                     key={option}
                     onClick={() => handleResultUpdate(auditionee.auditioneeNumber, option)}
-                    style={{
-                      padding: "10px 20px",
-                      fontSize: "16px",
-                      margin: "5px",
-                      backgroundColor:
-                        auditionee.result === option ? "#0088AD" : "#addbe3",
-                      color: auditionee.result === option ? "#fff" : "#fff",
-                      border: "none",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                      opacity: buttonLoading[auditionee.auditioneeNumber] === option ? 0.7 : 1,
-                    }}
-                    disabled={buttonLoading[auditionee.auditioneeNumber] === option} // Disable during loading
+                    className={`${styles.result_button} ${
+                      auditionee.result === option ? styles.selected_button : ""
+                    }`}
+                    disabled={buttonLoading[auditionee.auditioneeNumber] === option}
                   >
                     {buttonLoading[auditionee.auditioneeNumber] === option
                       ? "Loading..."
