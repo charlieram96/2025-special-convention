@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     // Fetch the sheet data to find the row index
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Audition List!A:O", // Adjust the range to include all columns
+      range: "Audition List!A:P", // Adjust the range to include all columns
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);
@@ -56,12 +56,13 @@ export default async function handler(req, res) {
       auditionee.reading || "",
       auditionee.level || "",
       auditionee.result || "",
+      auditionee.observations || "",
     ];
 
     // Update the row in the sheet
     const updateOptions = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: `Audition List!A${rowIndex + 1}:O${rowIndex + 1}`,
+      range: `Audition List!A${rowIndex + 1}:P${rowIndex + 1}`,
       valueInputOption: "RAW",
       resource: {
         values: [updatedRow],
