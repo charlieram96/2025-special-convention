@@ -12,6 +12,8 @@ import saveIcon from '../../public/save-icon.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import PasswordProtect from '../components/PasswordProtect';
+
 export default function Audition() {
   const [auditionList, setAuditionList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -103,8 +105,12 @@ export default function Audition() {
         const data = await response.json();
         const initializedData = (data.auditionList || []).map(auditionee => ({
           ...auditionee,
+          auditionTypes: auditionee.auditionType
+            ? auditionee.auditionType.split(',').map(type => type.trim())
+            : [],
           congregation: auditionee.congregation || "",
           observations: auditionee.observations || "",
+          auditionLink: auditionee.auditionLink || "",
           pitch: auditionee.pitch || "",
           rhythm: auditionee.rhythm || "",
           rangeOfVoice: auditionee.rangeOfVoice || "",
@@ -147,12 +153,13 @@ export default function Audition() {
   
     const matchesType =
       Object.values(filterTypes).some(Boolean) === false ||
-      filterTypes[auditionee.auditionType];
+      auditionee.auditionTypes.some(type => filterTypes[type]);
   
     return matchesSearch && matchesType;
   });
 
   return (
+    <PasswordProtect>
     <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
       <img src={logo.src} className={styles.main_logo} alt="logo" />
       <h1>Audition Scoring</h1>
@@ -202,13 +209,13 @@ export default function Audition() {
                   <img
                     src={auditionee.imageLink}
                     alt={`${auditionee.name}'s image`}
-                    style={{ width: "200px", height: "auto" }}
+                    style={{ width: "200px", height: "200px", objectFit: "cover" }}
                   />
                 ) : (
                   <img
                     src={profileBlank.src}
                     alt={`placeholder image`}
-                    style={{ width: "200px", height: "auto" }}
+                    style={{ width: "200px", height: "200px" }}
                   />
                 )}
                 <label>
@@ -234,7 +241,7 @@ export default function Audition() {
 
               <div className={styles.audition_type}>
                 Auditioning for:{" "}
-                <span className={styles.input_mimic}>{auditionee.auditionType}</span>
+                <span className={styles.input_mimic}>{auditionee.auditionTypes.join(', ')}</span>
               </div>
 
               <div className={styles.auditionee_main_col}>
@@ -275,12 +282,22 @@ export default function Audition() {
                     }
                   />
                 </div>
+                <div className={styles.audition_link}>
+                  Audition Link:{" "}
+                  <input
+                    type="text"
+                    value={auditionee.auditionLink || ""}
+                    onChange={(e) =>
+                      handleInputChange(e, auditionee.auditioneeNumber, "auditionLink")
+                    }
+                  />
+                </div>
               </div>
 
               {/* Vocals Section */}
               <div
                 className={`${styles.auditionee_vocals_col} ${
-                  auditionee.auditionType !== "Vocals" ? styles.reducedOpacity : ""
+                  !auditionee.auditionTypes.includes("Vocals") ? styles.reducedOpacity : ""
                 }`}
               >
                 <div className={styles.col_type}>Vocals</div>
@@ -292,6 +309,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "pitch")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Vocals")}
                   />
                 </div>
                 <div>
@@ -302,6 +320,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "rhythm")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Vocals")}
                   />
                 </div>
                 <div className={styles.rov}>
@@ -312,6 +331,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "rangeOfVoice")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Vocals")}
                   />
                   <div className={styles.rov_low}>(Range of voice)</div>
                 </div>
@@ -323,6 +343,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "harmony")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Vocals")}
                   />
                 </div>
               </div>
@@ -330,7 +351,7 @@ export default function Audition() {
               {/* Instrument Section */}
               <div
                 className={`${styles.auditionee_instrument_col} ${
-                  auditionee.auditionType !== "Instrument" ? styles.reducedOpacity : ""
+                  !auditionee.auditionTypes.includes("Instrument") ? styles.reducedOpacity : ""
                 }`}
               >
                 <div className={styles.col_type}>Instrument</div>
@@ -343,6 +364,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "instrument")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Instrument")}
                   />
                 </div>
                 <div>
@@ -353,6 +375,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "reading")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Instrument")}
                   />
                 </div>
                 <div>
@@ -363,6 +386,7 @@ export default function Audition() {
                     onChange={(e) =>
                       handleInputChange(e, auditionee.auditioneeNumber, "level")
                     }
+                    disabled={!auditionee.auditionTypes.includes("Instrument")}
                   />
                 </div>
               </div>
@@ -373,5 +397,6 @@ export default function Audition() {
       {/* Include the ToastContainer */}
       <ToastContainer />
     </div>
+    </PasswordProtect>
   );
 }

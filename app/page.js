@@ -5,6 +5,8 @@ import styles from './page.module.css';
 
 import logo from '../public/fort-lauderdale-2025-logo.svg'
 
+import PasswordProtect from './components/PasswordProtect';
+
 export default function Send() {
   const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState('');
@@ -58,6 +60,7 @@ export default function Send() {
   };
 
   return (
+    <PasswordProtect>
     <div className={styles.page_wrap}>
       <img src={logo.src} className={styles.logo} alt="logo" />
       <h1>Send audition invite email</h1>
@@ -77,5 +80,7 @@ export default function Send() {
         {loading ? "Sending Emails..." : "Send Results Emails"}
       </button>
     </div>
+    </PasswordProtect>
+
   );
 }

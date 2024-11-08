@@ -5,11 +5,24 @@ import styles from './Results.module.css';
 import logo from '../../public/fort-lauderdale-2025-logo.svg';
 import profileBlank from '../../public/blank-profile.jpg';
 
+import PasswordProtect from '../components/PasswordProtect';
+
 export default function Results() {
   const [auditionList, setAuditionList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState({}); // Track loading state per auditionee
-  const [filterOption, setFilterOption] = useState("All"); // New filter state
+  const [filterOption, setFilterOption] = useState("All"); // Existing filter state
+  const [resultFilter, setResultFilter] = useState("All"); // New result filter state
+
+  // State variables for metrics
+  const [metrics, setMetrics] = useState({
+    total: 0,
+    accepted: 0,
+    declined: 0,
+    backup: 0,
+    decided: 0,
+    pending: 0,
+  });
 
   // Fetch audition list data
   useEffect(() => {
@@ -17,7 +30,16 @@ export default function Results() {
       try {
         const response = await fetch("/api/get-audition-list");
         const data = await response.json();
-        setAuditionList(data.auditionList || []);
+
+        // Parse auditionType into an array of auditionTypes
+        const initializedData = (data.auditionList || []).map(auditionee => ({
+          ...auditionee,
+          auditionTypes: auditionee.auditionType
+            ? auditionee.auditionType.split(',').map(type => type.trim())
+            : [],
+        }));
+
+        setAuditionList(initializedData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching audition data:", error);
@@ -56,20 +78,77 @@ export default function Results() {
     }
   };
 
-  // Filtering the audition list based on the selected filter option
+    // Calculate metrics
+    useEffect(() => {
+        if (!loading && auditionList.length > 0) {
+          const total = auditionList.length;
+          const accepted = auditionList.filter(a => a.result === "Accept").length;
+          const declined = auditionList.filter(a => a.result === "Decline").length;
+          const backup = auditionList.filter(a => a.result === "Backup").length;
+          const decided = accepted + declined + backup;
+          const pending = total - decided;
+    
+          setMetrics({
+            total,
+            accepted,
+            declined,
+            backup,
+            decided,
+            pending,
+          });
+        }
+      }, [auditionList, loading]);
+
+  // Filtering the audition list based on the selected filter options
   const filteredAuditionList = auditionList.filter((auditionee) => {
+    let matchFilterOption = true;
     if (filterOption === "Completed") {
-      return auditionee.result && auditionee.result !== "";
+      matchFilterOption = auditionee.result && auditionee.result !== "";
     } else if (filterOption === "Needs Input") {
-      return !auditionee.result || auditionee.result === "";
+      matchFilterOption = !auditionee.result || auditionee.result === "";
     }
-    // "All" option
-    return true;
+
+    let matchResultFilter = true;
+    if (resultFilter !== "All") {
+      matchResultFilter = auditionee.result === resultFilter;
+    }
+
+    return matchFilterOption && matchResultFilter;
   });
 
   return (
-    <div style={{ textAlign: "center" }}  className={styles.results_wrap}>
+    <PasswordProtect>
+    <div style={{ textAlign: "center" }} className={styles.results_wrap}>
       <img src={logo.src} className={styles.main_logo} alt="logo" />
+
+       {/* Metrics Section */}
+       <div className={styles.metrics}>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Total Auditionees:</span>
+          <span className={styles.metrics_value}>{metrics.total}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Accepted:</span>
+          <span className={styles.metrics_value}>{metrics.accepted}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Declined:</span>
+          <span className={styles.metrics_value}>{metrics.declined}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Backup:</span>
+          <span className={styles.metrics_value}>{metrics.backup}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Decided On:</span>
+          <span className={styles.metrics_value}>{metrics.decided}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Pending:</span>
+          <span className={styles.metrics_value}>{metrics.pending}</span>
+        </div>
+      </div>
+
       <h1>Audition Results</h1>
 
       {/* Filter Buttons */}
@@ -80,6 +159,21 @@ export default function Results() {
             onClick={() => setFilterOption(option)}
             className={`${styles.filter_button} ${
               filterOption === option ? styles.active_button : ""
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+
+      {/* Result Filter Buttons */}
+      <div className={styles.result_filter_buttons}>
+        {["All", "Accept", "Decline", "Backup"].map((option) => (
+          <button
+            key={option}
+            onClick={() => setResultFilter(option)}
+            className={`${styles.filter_button} ${
+              resultFilter === option ? styles.active_button : ""
             }`}
           >
             {option}
@@ -123,8 +217,10 @@ export default function Results() {
                   </div>
                 </div>
                 <div className={styles.audition_type}>
-                    Auditioning for:{" "}
-                    <span className={styles.input_mimic}>{auditionee.auditionType}</span>
+                  Auditioning for:{" "}
+                  <span className={styles.input_mimic}>
+                    {auditionee.auditionTypes.join(', ')}
+                  </span>
                 </div>
                 <div className={styles.congregation}>
                   Congregation:{" "}
@@ -134,10 +230,18 @@ export default function Results() {
                   <div>Observations:</div>
                   <div className={styles.input_mimic}>{auditionee.observations || "N/A"}</div>
                 </div>
+                <div className={styles.audition_link}>
+                  <div>Audition Link:</div>
+                  <a target="_blank" className={styles.input_mimic} href={auditionee.auditionLink}>{auditionee.auditionLink ? "Click here to open" : "N/A"}</a>
+                </div>
               </div>
 
               {/* Vocals Section */}
-              <div className={styles.auditionee_vocals_col}>
+              <div
+                className={`${styles.auditionee_vocals_col} ${
+                  !auditionee.auditionTypes.includes("Vocals") ? styles.reducedOpacity : ""
+                }`}
+              >
                 <div className={styles.col_type}>Vocals</div>
                 <div>
                   <div className={styles.category}>Pitch:</div>
@@ -159,9 +263,13 @@ export default function Results() {
               </div>
 
               {/* Instrument Section */}
-              <div className={styles.auditionee_instrument_col}>
+              <div
+                className={`${styles.auditionee_instrument_col} ${
+                  !auditionee.auditionTypes.includes("Instrument") ? styles.reducedOpacity : ""
+                }`}
+              >
                 <div className={styles.col_type}>Instrument</div>
-                <div className={styles.instrument_input}>
+                <div>
                   <div className={styles.instrument_category}>Instrument:</div>
                   <span className={styles.input_mimic}>{auditionee.instrument || "N/A"}</span>
                 </div>
@@ -197,5 +305,6 @@ export default function Results() {
         </div>
       )}
     </div>
+    </PasswordProtect>
   );
 }

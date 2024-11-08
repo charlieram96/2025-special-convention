@@ -535,7 +535,7 @@ export default async function handler(req, res) {
                   <tr>
                     <td style="padding:38px 60px 18px 60px; line-height:26px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: left"><span style="color: #273159; font-size: 16px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">Dear ${name},
                         <br><br>
-                        Unfortunately, you were not selected to participate this time. We appreciate your efforts and hope to see you in the future.</span></div><div></div></div></td>
+                        Thank you very much for your efforts in participating as a volunteer for the 2025 Fort Lauderdale Special Convention. We would like to inform you that the number of volunteers have been selected and hope to see you in a future event.</span></div><div></div></div></td>
                   </tr>
                 </tbody>
               </table><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="3757586a-ce69-48ba-bd9a-0c0b7937a616">
