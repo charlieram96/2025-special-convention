@@ -23,7 +23,7 @@ export default function Audition() {
     Vocals: false,
     Instrument: false,
     Dance: false,
-  });
+  }); 
 
   const handleSave = async (auditionee) => {
     try {
