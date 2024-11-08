@@ -9,6 +9,8 @@
     background-color: #E8FCFF;
     padding: 0;
     padding-top: 200px;
+    overflow-x: auto;
+
 }
 
 .audition_search {
@@ -36,6 +38,15 @@
     margin-bottom: 50px !important;
 }
 
+@media screen and (max-width: 600px) {
+    .filter_buttons {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        margin-bottom: 50px !important;
+    }
+}
+
 .filter_buttons button {
     font-weight: 700;
 }
@@ -48,6 +59,7 @@
 .auditionee {
     position: relative;
     width: 100%;
+    min-width: 1600px;
     display: flex;
     flex-direction: row;
     padding: 70px 25px 25px 25px;
@@ -107,6 +119,7 @@
     gap: 5px;
     color: var(--foreground);
     transition: .3s ease-out;
+    width: 200px;
 }
 
 .upload_button:hover {
@@ -282,18 +295,18 @@
   
 .save_button {
     position: absolute;
-    top: 0;
+    top: 12px;
     border: none;
-    right: 0;
-    height: 100%;
-    width: 90px;
+    left: 487px;
+    border-radius: 5px;
+    height: 40px;
+    width: 200px;
     background-color: #82ec90;
     color: #fff;
     font-weight: 800;
     cursor: pointer;
     transition: .3s ease-out;
     display: flex;
-    flex-direction: column;
     gap: 10px;
     font-size: 14px;
     justify-content: center;
@@ -301,7 +314,7 @@
 }
 
 .save_button img {
-    height: 30px;
+    height: 20px;
 }
 
 .save_button:hover {
