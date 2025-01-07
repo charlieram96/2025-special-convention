@@ -356,3 +356,35 @@
     margin-bottom: 10px;
   }
   
+  .judge_scores {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+  
+.judge_scores > div {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.nav {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.nav_button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    background-color: #0088ad;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.nav_button:hover {
+    background-color: #006f8a;
+}
+  

@@ -29,3 +29,27 @@
     font-size: 16px;
 
 }
+
+.nav {
+    position: absolute;
+    display: flex;
+    gap: 20px;
+    top: 20px;
+    left: 20px;
+}
+
+.nav_button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    background-color: #0088ad;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.nav_button:hover {
+    background-color: #006f8a;
+}
+  

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from './Results.module.css';
-import logo from '../../public/fort-lauderdale-2025-logo.svg';
-import profileBlank from '../../public/blank-profile.jpg';
+import Link from "next/link";
+import styles from "./Results.module.css";
+import logo from "../../public/fort-lauderdale-2025-logo.svg";
+import profileBlank from "../../public/blank-profile.jpg";
 
-import PasswordProtect from '../components/PasswordProtect';
+import PasswordProtect from "../components/PasswordProtect";
 
 export default function Results() {
   const [auditionList, setAuditionList] = useState([]);
@@ -31,11 +32,16 @@ export default function Results() {
         const data = await response.json();
 
         // Parse auditionType into an array of auditionTypes
-        const initializedData = (data.auditionList || []).map(auditionee => ({
+        const initializedData = (data.auditionList || []).map((auditionee) => ({
           ...auditionee,
           auditionTypes: auditionee.auditionType
-            ? auditionee.auditionType.split(',').map(type => type.trim())
+            ? auditionee.auditionType.split(",").map((type) => type.trim())
             : [],
+          // If you store judge scores in your database/Google Sheet,
+          // ensure they're included here. Example:
+          judge1Score: auditionee.judge1Score || "",
+          judge2Score: auditionee.judge2Score || "",
+          judge3Score: auditionee.judge3Score || "",
         }));
 
         setAuditionList(initializedData);
@@ -80,14 +86,14 @@ export default function Results() {
   // Calculate metrics
   useEffect(() => {
     if (!loading && auditionList.length > 0 && selectedAuditionType) {
-      const filteredAuditionees = auditionList.filter(auditionee =>
+      const filteredAuditionees = auditionList.filter((auditionee) =>
         auditionee.auditionTypes.includes(selectedAuditionType)
       );
 
       const total = filteredAuditionees.length;
-      const accepted = filteredAuditionees.filter(a => a.result === "Accept").length;
-      const declined = filteredAuditionees.filter(a => a.result === "Decline").length;
-      const backup = filteredAuditionees.filter(a => a.result === "Backup").length;
+      const accepted = filteredAuditionees.filter((a) => a.result === "Accept").length;
+      const declined = filteredAuditionees.filter((a) => a.result === "Decline").length;
+      const backup = filteredAuditionees.filter((a) => a.result === "Backup").length;
       const pending = total - accepted - declined - backup;
 
       setMetrics({
@@ -102,30 +108,36 @@ export default function Results() {
 
   // Filtering the audition list based on the selected filter options
   const filteredAuditionList = auditionList.filter((auditionee) => {
+    if (!selectedAuditionType) return false; // If no type selected, skip
     // Check if auditionee has the selected audition type
     if (!auditionee.auditionTypes.includes(selectedAuditionType)) {
       return false;
     }
 
     // Apply result filter
-    let matchResultFilter = true;
-    if (resultFilter !== "All") {
-      if (resultFilter === "Pending") {
-        matchResultFilter = !auditionee.result || auditionee.result === "";
-      } else {
-        matchResultFilter = auditionee.result === resultFilter;
-      }
+    if (resultFilter === "All") return true;
+    if (resultFilter === "Pending") {
+      return !auditionee.result || auditionee.result === "";
     }
-
-    return matchResultFilter;
+    return auditionee.result === resultFilter;
   });
 
   // If no audition type is selected, display selection options
   if (!selectedAuditionType) {
     return (
-      <PasswordProtect>
+      // <PasswordProtect>
         <div style={{ textAlign: "center" }} className={styles.results_wrap}>
           <img src={logo.src} className={styles.main_logo} alt="logo" />
+          {/* Navigation Buttons */}
+          <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+            <Link href="../">
+              <button className={styles.nav_button}>Home</button>
+            </Link>
+            <Link href="../audition">
+              <button className={styles.nav_button}>Audition</button>
+            </Link>
+          </nav>
+
           <h1>Select Audition Type</h1>
           <div className={styles.selection_buttons}>
             {["Vocals", "Instrument", "Dance"].map((type) => (
@@ -139,14 +151,24 @@ export default function Results() {
             ))}
           </div>
         </div>
-      </PasswordProtect>
+      // </PasswordProtect>
     );
   }
 
   return (
-    <PasswordProtect>
+    // <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.results_wrap}>
         <img src={logo.src} className={styles.main_logo} alt="logo" />
+
+        {/* Navigation Buttons */}
+        <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+          <Link href="../">
+            <button className={styles.nav_button}>Home</button>
+          </Link>
+          <Link href="../audition">
+            <button className={styles.nav_button}>Audition</button>
+          </Link>
+        </nav>
 
         <h1>{selectedAuditionType} Auditions</h1>
 
@@ -174,9 +196,7 @@ export default function Results() {
           </div>
         </div>
 
-        <div className={styles.filter_title}>
-            Filters
-        </div>
+        <div className={styles.filter_title}>Filters</div>
 
         {/* Result Filter Buttons */}
         <div className={styles.result_filter_buttons}>
@@ -231,7 +251,7 @@ export default function Results() {
                   <div className={styles.audition_type}>
                     Auditioning for:{" "}
                     <span className={styles.input_mimic}>
-                      {auditionee.auditionTypes.join(', ')}
+                      {auditionee.auditionTypes.join(", ")}
                     </span>
                   </div>
                   <div className={styles.congregation}>
@@ -252,6 +272,20 @@ export default function Results() {
                       {auditionee.auditionLink ? "Click here to open" : "N/A"}
                     </a>
                   </div>
+
+                  {/* Judge Scores */}
+                  <div className={styles.judge_scores}>
+                    <div>Judge 1 Score:</div>
+                    <span className={styles.input_mimic}>{auditionee.judge1Score || "N/A"}</span>
+                  </div>
+                  <div className={styles.judge_scores}>
+                    <div>Judge 2 Score:</div>
+                    <span className={styles.input_mimic}>{auditionee.judge2Score || "N/A"}</span>
+                  </div>
+                  <div className={styles.judge_scores}>
+                    <div>Judge 3 Score:</div>
+                    <span className={styles.input_mimic}>{auditionee.judge3Score || "N/A"}</span>
+                  </div>
                 </div>
 
                 {/* Vocals Section */}
@@ -271,7 +305,9 @@ export default function Results() {
                   </div>
                   <div className={styles.rov}>
                     <div className={styles.category}>ROV:</div>
-                    <span className={styles.input_mimic}>{auditionee.rangeOfVoice || "N/A"}</span>
+                    <span className={styles.input_mimic}>
+                      {auditionee.rangeOfVoice || "N/A"}
+                    </span>
                     <div className={styles.rov_low}>(Range of voice)</div>
                   </div>
                   <div>
@@ -300,8 +336,7 @@ export default function Results() {
                     <span className={styles.input_mimic}>{auditionee.level || "N/A"}</span>
                   </div>
                 </div>
-              {/* Dance Section (if applicable) */}
-              {/* You can add a Dance section here if you have dance-specific data */}
+
                 {/* Result Buttons */}
                 <div className={styles.result_buttons}>
                   {["Accept", "Decline", "Backup"].map((option) => (
@@ -324,6 +359,6 @@ export default function Results() {
           </div>
         )}
       </div>
-    </PasswordProtect>
+    // </PasswordProtect>
   );
 }

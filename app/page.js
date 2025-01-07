@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Link from "next/link";
 import styles from './page.module.css';
 
 import logo from '../public/fort-lauderdale-2025-logo.svg'
@@ -60,8 +61,16 @@ export default function Send() {
   };
 
   return (
-    <PasswordProtect>
+    // <PasswordProtect>
     <div className={styles.page_wrap}>
+      <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+        <Link href="./audition">
+          <button className={styles.nav_button}>Audition</button>
+        </Link>
+        <Link href="./results">
+          <button className={styles.nav_button}>Results</button>
+        </Link>
+      </nav>
       <img src={logo.src} className={styles.logo} alt="logo" />
       <h1>Send audition invite email</h1>
       <button onClick={sendTestEmail} disabled={isSending}>
@@ -80,7 +89,7 @@ export default function Send() {
         {loading ? "Sending Emails..." : "Send Results Emails"}
       </button>
     </div>
-    </PasswordProtect>
+    // </PasswordProtect>
 
   );
 }
