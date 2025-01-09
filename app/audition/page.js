@@ -9,7 +9,6 @@ import uploadIcon from "../../public/upload-icon.svg";
 import logo from "../../public/fort-lauderdale-2025-logo.svg";
 import saveIcon from "../../public/save-icon.svg";
 
-// Import ToastContainer and toast
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -41,7 +40,9 @@ export default function Audition() {
           `Data saved successfully for auditionee ${auditionee.auditioneeNumber}`
         );
       } else {
-        toast.error(`Failed to save data for auditionee ${auditionee.auditioneeNumber}`);
+        toast.error(
+          `Failed to save data for auditionee ${auditionee.auditioneeNumber}`
+        );
       }
     } catch (error) {
       console.error("Error saving auditionee data:", error);
@@ -123,7 +124,7 @@ export default function Audition() {
           instrument: aud.instrument || "",
           reading: aud.reading || "",
           level: aud.level || "",
-          // NEW judge score fields
+          // Judge score fields
           judge1Score: aud.judge1Score || "",
           judge2Score: aud.judge2Score || "",
           judge3Score: aud.judge3Score || "",
@@ -147,6 +148,18 @@ export default function Audition() {
     }));
   };
 
+  // Helper: Convert "Smith, John" -> "John Smith"
+  // If the name is not in "Last, First" format, returns the original
+  const getReversedName = (fullName) => {
+    // Example fullName = "Smith, John"
+    const parts = fullName.split(",").map((p) => p.trim()); // ["Smith", "John"]
+    if (parts.length === 2) {
+      // Reverse
+      return `${parts[1]} ${parts[0]}`.trim(); // "John Smith"
+    }
+    return fullName; // If not exactly 2 parts, just return as is
+  };
+
   // Filter auditionees based on search term and selected types
   const filteredList = auditionList.filter((auditionee) => {
     // Parse the searchTerm into an array of trimmed search terms
@@ -155,16 +168,23 @@ export default function Audition() {
       .map((term) => term.trim().toLowerCase())
       .filter((term) => term !== "");
 
-    // Check if auditioneeNumber or name matches any of the search terms
+    // Handle name logic:
     const auditioneeNumberLC = auditionee.auditioneeNumber.toLowerCase();
     const auditioneeNameLC = auditionee.name.toLowerCase();
+    // Create reversed name if the format is "Last, First"
+    const reversedNameLC = getReversedName(auditionee.name).toLowerCase();
 
+    // If no searchTerm, matches automatically
+    // Otherwise, search must appear in either auditioneeNumber or name or reversed name
     const matchesSearch =
       searchTerms.length === 0 ||
-      searchTerms.some(
-        (term) =>
-          auditioneeNumberLC.includes(term) || auditioneeNameLC.includes(term)
-      );
+      searchTerms.some((term) => {
+        return (
+          auditioneeNumberLC.includes(term) ||
+          auditioneeNameLC.includes(term) ||
+          reversedNameLC.includes(term)
+        );
+      });
 
     // Filter based on selected audition types
     const matchesType =
@@ -178,7 +198,7 @@ export default function Audition() {
     // <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
         <img src={logo.src} className={styles.main_logo} alt="logo" />
-        
+
         {/* Navigation Buttons */}
         <nav className={styles.nav} style={{ marginBottom: "20px" }}>
           <Link href="../">
@@ -268,7 +288,9 @@ export default function Audition() {
 
                 <div className={styles.audition_type}>
                   Auditioning for:{" "}
-                  <span className={styles.input_mimic}>{auditionee.auditionTypes.join(", ")}</span>
+                  <span className={styles.input_mimic}>
+                    {auditionee.auditionTypes.join(", ")}
+                  </span>
                 </div>
 
                 <div className={styles.auditionee_main_col}>
@@ -282,7 +304,9 @@ export default function Audition() {
                       <input
                         type="text"
                         value={auditionee.name}
-                        onChange={(e) => handleInputChange(e, auditionee.auditioneeNumber, "name")}
+                        onChange={(e) =>
+                          handleInputChange(e, auditionee.auditioneeNumber, "name")
+                        }
                       />
                     </div>
                   </div>
