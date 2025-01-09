@@ -37,8 +37,6 @@ export default function Results() {
           auditionTypes: auditionee.auditionType
             ? auditionee.auditionType.split(",").map((type) => type.trim())
             : [],
-          // If you store judge scores in your database/Google Sheet,
-          // ensure they're included here. Example:
           judge1Score: auditionee.judge1Score || "",
           judge2Score: auditionee.judge2Score || "",
           judge3Score: auditionee.judge3Score || "",
@@ -109,6 +107,7 @@ export default function Results() {
   // Filtering the audition list based on the selected filter options
   const filteredAuditionList = auditionList.filter((auditionee) => {
     if (!selectedAuditionType) return false; // If no type selected, skip
+
     // Check if auditionee has the selected audition type
     if (!auditionee.auditionTypes.includes(selectedAuditionType)) {
       return false;
@@ -128,6 +127,7 @@ export default function Results() {
       // <PasswordProtect>
         <div style={{ textAlign: "center" }} className={styles.results_wrap}>
           <img src={logo.src} className={styles.main_logo} alt="logo" />
+
           {/* Navigation Buttons */}
           <nav className={styles.nav} style={{ marginBottom: "20px" }}>
             <Link href="../">
@@ -217,145 +217,163 @@ export default function Results() {
           <p>Loading audition data...</p>
         ) : (
           <div>
-            {filteredAuditionList.map((auditionee) => (
-              <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
-                {/* Profile Image */}
-                <div className={styles.profile_image_wrap}>
-                  {auditionee.imageLink ? (
-                    <img
-                      src={auditionee.imageLink}
-                      alt={`${auditionee.name}'s image`}
-                      className={styles.profile_image}
-                    />
-                  ) : (
-                    <img
-                      src={profileBlank.src}
-                      alt="placeholder image"
-                      className={styles.profile_image}
-                    />
-                  )}
-                </div>
+            {filteredAuditionList.map((auditionee) => {
+              // Compute average judge score
+              // Convert to numbers if possible, otherwise treat as 0
+              const j1 = parseFloat(auditionee.judge1Score) || 0;
+              const j2 = parseFloat(auditionee.judge2Score) || 0;
+              const j3 = parseFloat(auditionee.judge3Score) || 0;
+              const averageScore = ((j1 + j2 + j3) / 3).toFixed(2); // Round to 2 decimals
 
-                {/* Auditionee Information */}
-                <div className={styles.auditionee_info}>
-                  <div className={styles.row}>
-                    <div className={styles.auditionee_number}>
-                      Number:{" "}
-                      <span className={styles.input_mimic}>{auditionee.auditioneeNumber}</span>
+              return (
+                <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
+                  {/* Profile Image */}
+                  <div className={styles.profile_image_wrap}>
+                    {auditionee.imageLink ? (
+                      <img
+                        src={auditionee.imageLink}
+                        alt={`${auditionee.name}'s image`}
+                        className={styles.profile_image}
+                      />
+                    ) : (
+                      <img
+                        src={profileBlank.src}
+                        alt="placeholder image"
+                        className={styles.profile_image}
+                      />
+                    )}
+                  </div>
+
+                  {/* Auditionee Information */}
+                  <div className={styles.auditionee_info}>
+                    <div className={styles.row}>
+                      <div className={styles.auditionee_number}>
+                        Number:{" "}
+                        <span className={styles.input_mimic}>{auditionee.auditioneeNumber}</span>
+                      </div>
+                      <div className={styles.auditionee_name}>
+                        Name:{" "}
+                        <span className={styles.input_mimic}>{auditionee.name}</span>
+                      </div>
                     </div>
-                    <div className={styles.auditionee_name}>
-                      Name:{" "}
-                      <span className={styles.input_mimic}>{auditionee.name}</span>
+                    <div className={styles.audition_type}>
+                      Auditioning for:{" "}
+                      <span className={styles.input_mimic}>
+                        {auditionee.auditionTypes.join(", ")}
+                      </span>
+                    </div>
+                    <div className={styles.congregation}>
+                      Congregation:{" "}
+                      <span className={styles.input_mimic}>
+                        {auditionee.congregation || "N/A"}
+                      </span>
+                    </div>
+                    <div className={styles.observations}>
+                      <div>Observations:</div>
+                      <div className={styles.input_mimic}>{auditionee.observations || "N/A"}</div>
+                    </div>
+                    <div className={styles.audition_link}>
+                      <div>Audition Link:</div>
+                      <a
+                        target="_blank"
+                        className={styles.input_mimic}
+                        href={auditionee.auditionLink}
+                      >
+                        {auditionee.auditionLink ? "Click here to open" : "N/A"}
+                      </a>
+                    </div>
+
+                    {/* Judge Scores */}
+                    <div className={styles.judge_scores}>
+                      <div>Judge 1 Score:</div>
+                      <span className={styles.input_mimic}>{auditionee.judge1Score || "N/A"}</span>
+                    </div>
+                    <div className={styles.judge_scores}>
+                      <div>Judge 2 Score:</div>
+                      <span className={styles.input_mimic}>{auditionee.judge2Score || "N/A"}</span>
+                    </div>
+                    <div className={styles.judge_scores}>
+                      <div>Judge 3 Score:</div>
+                      <span className={styles.input_mimic}>{auditionee.judge3Score || "N/A"}</span>
+                    </div>
+                    {/* Average Score */}
+                    <div className={styles.judge_scores}>
+                      <div>Average Score:</div>
+                      <span className={styles.input_mimic}>
+                        {isNaN(averageScore) ? "N/A" : averageScore}
+                      </span>
                     </div>
                   </div>
-                  <div className={styles.audition_type}>
-                    Auditioning for:{" "}
-                    <span className={styles.input_mimic}>
-                      {auditionee.auditionTypes.join(", ")}
-                    </span>
-                  </div>
-                  <div className={styles.congregation}>
-                    Congregation:{" "}
-                    <span className={styles.input_mimic}>{auditionee.congregation || "N/A"}</span>
-                  </div>
-                  <div className={styles.observations}>
-                    <div>Observations:</div>
-                    <div className={styles.input_mimic}>{auditionee.observations || "N/A"}</div>
-                  </div>
-                  <div className={styles.audition_link}>
-                    <div>Audition Link:</div>
-                    <a
-                      target="_blank"
-                      className={styles.input_mimic}
-                      href={auditionee.auditionLink}
-                    >
-                      {auditionee.auditionLink ? "Click here to open" : "N/A"}
-                    </a>
+
+                  {/* Vocals Section */}
+                  <div
+                    className={`${styles.auditionee_vocals_col} ${
+                      !auditionee.auditionTypes.includes("Vocals") ? styles.reducedOpacity : ""
+                    }`}
+                  >
+                    <div className={styles.col_type}>Vocals</div>
+                    <div>
+                      <div className={styles.category}>Pitch:</div>
+                      <span className={styles.input_mimic}>{auditionee.pitch || "N/A"}</span>
+                    </div>
+                    <div>
+                      <div className={styles.category}>Rhythm:</div>
+                      <span className={styles.input_mimic}>{auditionee.rhythm || "N/A"}</span>
+                    </div>
+                    <div className={styles.rov}>
+                      <div className={styles.category}>ROV:</div>
+                      <span className={styles.input_mimic}>
+                        {auditionee.rangeOfVoice || "N/A"}
+                      </span>
+                      <div className={styles.rov_low}>(Range of voice)</div>
+                    </div>
+                    <div>
+                      <div className={styles.category}>Harmony:</div>
+                      <span className={styles.input_mimic}>{auditionee.harmony || "N/A"}</span>
+                    </div>
                   </div>
 
-                  {/* Judge Scores */}
-                  <div className={styles.judge_scores}>
-                    <div>Judge 1 Score:</div>
-                    <span className={styles.input_mimic}>{auditionee.judge1Score || "N/A"}</span>
+                  {/* Instrument Section */}
+                  <div
+                    className={`${styles.auditionee_instrument_col} ${
+                      !auditionee.auditionTypes.includes("Instrument") ? styles.reducedOpacity : ""
+                    }`}
+                  >
+                    <div className={styles.col_type}>Instrument</div>
+                    <div>
+                      <div className={styles.instrument_category}>Instrument:</div>
+                      <span className={styles.input_mimic}>{auditionee.instrument || "N/A"}</span>
+                    </div>
+                    <div>
+                      <div className={styles.instrument_category}>Reading:</div>
+                      <span className={styles.input_mimic}>{auditionee.reading || "N/A"}</span>
+                    </div>
+                    <div>
+                      <div className={styles.instrument_category}>Level:</div>
+                      <span className={styles.input_mimic}>{auditionee.level || "N/A"}</span>
+                    </div>
                   </div>
-                  <div className={styles.judge_scores}>
-                    <div>Judge 2 Score:</div>
-                    <span className={styles.input_mimic}>{auditionee.judge2Score || "N/A"}</span>
-                  </div>
-                  <div className={styles.judge_scores}>
-                    <div>Judge 3 Score:</div>
-                    <span className={styles.input_mimic}>{auditionee.judge3Score || "N/A"}</span>
-                  </div>
-                </div>
 
-                {/* Vocals Section */}
-                <div
-                  className={`${styles.auditionee_vocals_col} ${
-                    !auditionee.auditionTypes.includes("Vocals") ? styles.reducedOpacity : ""
-                  }`}
-                >
-                  <div className={styles.col_type}>Vocals</div>
-                  <div>
-                    <div className={styles.category}>Pitch:</div>
-                    <span className={styles.input_mimic}>{auditionee.pitch || "N/A"}</span>
-                  </div>
-                  <div>
-                    <div className={styles.category}>Rhythm:</div>
-                    <span className={styles.input_mimic}>{auditionee.rhythm || "N/A"}</span>
-                  </div>
-                  <div className={styles.rov}>
-                    <div className={styles.category}>ROV:</div>
-                    <span className={styles.input_mimic}>
-                      {auditionee.rangeOfVoice || "N/A"}
-                    </span>
-                    <div className={styles.rov_low}>(Range of voice)</div>
-                  </div>
-                  <div>
-                    <div className={styles.category}>Harmony:</div>
-                    <span className={styles.input_mimic}>{auditionee.harmony || "N/A"}</span>
+                  {/* Result Buttons */}
+                  <div className={styles.result_buttons}>
+                    {["Accept", "Decline", "Backup"].map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => handleResultUpdate(auditionee.auditioneeNumber, option)}
+                        className={`${styles.result_button} ${
+                          auditionee.result === option ? styles.selected_button : ""
+                        }`}
+                        disabled={buttonLoading[auditionee.auditioneeNumber] === option}
+                      >
+                        {buttonLoading[auditionee.auditioneeNumber] === option
+                          ? "Loading..."
+                          : option}
+                      </button>
+                    ))}
                   </div>
                 </div>
-
-                {/* Instrument Section */}
-                <div
-                  className={`${styles.auditionee_instrument_col} ${
-                    !auditionee.auditionTypes.includes("Instrument") ? styles.reducedOpacity : ""
-                  }`}
-                >
-                  <div className={styles.col_type}>Instrument</div>
-                  <div>
-                    <div className={styles.instrument_category}>Instrument:</div>
-                    <span className={styles.input_mimic}>{auditionee.instrument || "N/A"}</span>
-                  </div>
-                  <div>
-                    <div className={styles.instrument_category}>Reading:</div>
-                    <span className={styles.input_mimic}>{auditionee.reading || "N/A"}</span>
-                  </div>
-                  <div>
-                    <div className={styles.instrument_category}>Level:</div>
-                    <span className={styles.input_mimic}>{auditionee.level || "N/A"}</span>
-                  </div>
-                </div>
-
-                {/* Result Buttons */}
-                <div className={styles.result_buttons}>
-                  {["Accept", "Decline", "Backup"].map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => handleResultUpdate(auditionee.auditioneeNumber, option)}
-                      className={`${styles.result_button} ${
-                        auditionee.result === option ? styles.selected_button : ""
-                      }`}
-                      disabled={buttonLoading[auditionee.auditioneeNumber] === option}
-                    >
-                      {buttonLoading[auditionee.auditioneeNumber] === option
-                        ? "Loading..."
-                        : option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
