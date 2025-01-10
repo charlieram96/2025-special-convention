@@ -353,4 +353,40 @@
 .nav_button:hover {
     background-color: #006f8a;
 }
-  
+
+.dance_level_wrapper {
+    display: flex;
+    gap: 18px;
+}
+
+.dropdown {
+    /* height: 25px; */
+    width: 200px;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    color: var(--foreground);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.yes_dropdown {
+    width: 70px;
+    margin-left: 5px;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    color: var(--foreground);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}

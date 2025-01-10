@@ -56,10 +56,10 @@ export default function Audition() {
   const handleInputChange = (e, auditioneeNumber, field) => {
     const value = e.target.value;
     setAuditionList((prevList) =>
-      prevList.map((auditionee) =>
-        auditionee.auditioneeNumber === auditioneeNumber
-          ? { ...auditionee, [field]: value }
-          : auditionee
+      prevList.map((aud) =>
+        aud.auditioneeNumber === auditioneeNumber
+          ? { ...aud, [field]: value }
+          : aud
       )
     );
   };
@@ -128,6 +128,8 @@ export default function Audition() {
           judge1Score: aud.judge1Score || "",
           judge2Score: aud.judge2Score || "",
           judge3Score: aud.judge3Score || "",
+          // Add a "danceLevel" field if not present
+          danceLevel: aud.danceLevel || "",
         }));
         setAuditionList(initializedData);
         setLoading(false);
@@ -149,15 +151,12 @@ export default function Audition() {
   };
 
   // Helper: Convert "Smith, John" -> "John Smith"
-  // If the name is not in "Last, First" format, returns the original
   const getReversedName = (fullName) => {
-    // Example fullName = "Smith, John"
-    const parts = fullName.split(",").map((p) => p.trim()); // ["Smith", "John"]
+    const parts = fullName.split(",").map((p) => p.trim());
     if (parts.length === 2) {
-      // Reverse
-      return `${parts[1]} ${parts[0]}`.trim(); // "John Smith"
+      return `${parts[1]} ${parts[0]}`.trim();
     }
-    return fullName; // If not exactly 2 parts, just return as is
+    return fullName;
   };
 
   // Filter auditionees based on search term and selected types
@@ -168,14 +167,10 @@ export default function Audition() {
       .map((term) => term.trim().toLowerCase())
       .filter((term) => term !== "");
 
-    // Handle name logic:
     const auditioneeNumberLC = auditionee.auditioneeNumber.toLowerCase();
     const auditioneeNameLC = auditionee.name.toLowerCase();
-    // Create reversed name if the format is "Last, First"
     const reversedNameLC = getReversedName(auditionee.name).toLowerCase();
 
-    // If no searchTerm, matches automatically
-    // Otherwise, search must appear in either auditioneeNumber or name or reversed name
     const matchesSearch =
       searchTerms.length === 0 ||
       searchTerms.some((term) => {
@@ -186,7 +181,6 @@ export default function Audition() {
         );
       });
 
-    // Filter based on selected audition types
     const matchesType =
       Object.values(filterTypes).some(Boolean) === false ||
       auditionee.auditionTypes.some((type) => filterTypes[type]);
@@ -195,7 +189,7 @@ export default function Audition() {
   });
 
   return (
-    // <PasswordProtect>
+    <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
         <img src={logo.src} className={styles.main_logo} alt="logo" />
 
@@ -244,9 +238,15 @@ export default function Audition() {
           <p>Loading audition data...</p>
         ) : (
           <div>
-            {filteredList.map((auditionee) => (
-              <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
-                <button className={styles.save_button} onClick={() => handleSave(auditionee)}>
+            {filteredList.map((auditionee, index) => (
+              <div
+                key={`${auditionee.auditioneeNumber}-${index}`}
+                className={styles.auditionee}
+              >
+                <button
+                  className={styles.save_button}
+                  onClick={() => handleSave(auditionee)}
+                >
                   <img src={saveIcon.src} alt="save icon" />
                   Save
                 </button>
@@ -269,7 +269,9 @@ export default function Audition() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) => handleImageUpload(e, auditionee.auditioneeNumber)}
+                      onChange={(e) =>
+                        handleImageUpload(e, auditionee.auditioneeNumber)
+                      }
                       style={{ display: "none" }}
                     />
                     <button
@@ -297,7 +299,13 @@ export default function Audition() {
                   <div className={styles.row}>
                     <div className={styles.auditionee_number}>
                       Number:{" "}
-                      <input type="text" value={auditionee.auditioneeNumber} readOnly />
+                      <input
+                        type="text"
+                        value={auditionee.auditioneeNumber}
+                        onChange={(e) =>
+                          handleInputChange(e, auditionee.auditioneeNumber, "auditioneeNumber")
+                        }
+                      />
                     </div>
                     <div className={styles.auditionee_name}>
                       Name:{" "}
@@ -329,6 +337,33 @@ export default function Audition() {
                       }
                     />
                   </div>
+
+                  {/* Dance Level Dropdown (disabled unless "Dance" is in auditionTypes) */}
+                  <div
+                    className={styles.dance_level_wrapper}
+                    style={{
+                      opacity: auditionee.auditionTypes.includes("Dance") ? 1 : 0.3,
+                      pointerEvents: auditionee.auditionTypes.includes("Dance")
+                        ? "auto"
+                        : "none",
+                    }}
+                  >
+                    <label>Dance level:</label>
+                    <select
+                      className={styles.dropdown}
+                      value={auditionee.danceLevel || ""}
+                      onChange={(e) =>
+                        handleInputChange(e, auditionee.auditioneeNumber, "danceLevel")
+                      }
+                    >
+                      <option value="">Select Dance Level</option>
+                      <option value="4: Expert">4: Expert</option>
+                      <option value="3: Good">3: Good</option>
+                      <option value="2: Acceptable">2: Acceptable</option>
+                      <option value="1: Deficient">1: Deficient</option>
+                    </select>
+                  </div>
+
                   <div className={styles.audition_link}>
                     Audition Link:{" "}
                     <input
@@ -380,50 +415,78 @@ export default function Audition() {
                   }`}
                 >
                   <div className={styles.col_type}>Vocals</div>
+                  {/* Pitch Dropdown */}
                   <div>
                     <div className={styles.category}>Pitch:</div>
-                    <input
-                      type="text"
+                    <select
+                      className={styles.dropdown}
                       value={auditionee.pitch || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "pitch")
                       }
                       disabled={!auditionee.auditionTypes.includes("Vocals")}
-                    />
+                    >
+                      <option value="">Select Pitch Level</option>
+                      <option value="4: Expert">4: Expert</option>
+                      <option value="3: Good">3: Good</option>
+                      <option value="2: Acceptable">2: Acceptable</option>
+                      <option value="1: Deficient">1: Deficient</option>
+                    </select>
                   </div>
+                  {/* Rhythm Dropdown */}
                   <div>
                     <div className={styles.category}>Rhythm:</div>
-                    <input
-                      type="text"
+                    <select
+                      className={styles.dropdown}
                       value={auditionee.rhythm || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "rhythm")
                       }
                       disabled={!auditionee.auditionTypes.includes("Vocals")}
-                    />
+                    >
+                      <option value="">Select Rhythm Level</option>
+                      <option value="4: Expert">4: Expert</option>
+                      <option value="3: Good">3: Good</option>
+                      <option value="2: Acceptable">2: Acceptable</option>
+                      <option value="1: Deficient">1: Deficient</option>
+                    </select>
                   </div>
+                  {/* ROV Dropdown */}
                   <div className={styles.rov}>
                     <div className={styles.category}>ROV:</div>
-                    <input
-                      type="text"
+                    <select
+                      className={styles.dropdown}
                       value={auditionee.rangeOfVoice || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "rangeOfVoice")
                       }
                       disabled={!auditionee.auditionTypes.includes("Vocals")}
-                    />
+                    >
+                      <option value="">Select Range</option>
+                      <option value="Soprano">Soprano</option>
+                      <option value="Alto">Alto</option>
+                      <option value="Tenor">Tenor</option>
+                      <option value="Bass">Bass</option>
+                    </select>
                     <div className={styles.rov_low}>(Range of voice)</div>
                   </div>
+                  {/* Harmony Dropdown */}
                   <div>
                     <div className={styles.category}>Harmony:</div>
-                    <input
-                      type="text"
+                    <select
+                      className={styles.dropdown}
                       value={auditionee.harmony || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "harmony")
                       }
                       disabled={!auditionee.auditionTypes.includes("Vocals")}
-                    />
+                    >
+                      <option value="">Select Harmony Level</option>
+                      <option value="4: Expert">4: Expert</option>
+                      <option value="3: Good">3: Good</option>
+                      <option value="2: Acceptable">2: Acceptable</option>
+                      <option value="1: Deficient">1: Deficient</option>
+                    </select>
                   </div>
                 </div>
 
@@ -448,14 +511,19 @@ export default function Audition() {
                   </div>
                   <div>
                     <div className={styles.instrument_category}>Reading:</div>
-                    <input
-                      type="text"
+                    {/* Reading Dropdown: Yes / No */}
+                    <select
+                      className={styles.yes_dropdown}
                       value={auditionee.reading || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "reading")
                       }
                       disabled={!auditionee.auditionTypes.includes("Instrument")}
-                    />
+                    >
+                      <option value="">Select Reading</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
                   </div>
                   <div>
                     <div className={styles.instrument_category}>Level:</div>
@@ -475,6 +543,6 @@ export default function Audition() {
         )}
         <ToastContainer />
       </div>
-    // </PasswordProtect>
+    </PasswordProtect>
   );
 }
