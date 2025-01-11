@@ -73,7 +73,8 @@ export default function Send() {
       </nav>
       <img src={logo.src} className={styles.logo} alt="logo" />
       <h1>Send audition invite email</h1>
-      <button onClick={sendTestEmail} disabled={isSending}>
+      {/* <button onClick={sendTestEmail} disabled={isSending}> */}
+      <button onClick={sendTestEmail} disabled={true}>
         {isSending ? 'Sending...' : 'Send Email'}
       </button>
       {message && <p>{message}</p>}
@@ -84,7 +85,8 @@ export default function Send() {
       <button
         onClick={handleSendResultsEmails}
         style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
-        disabled={loading}
+        // disabled={loading}
+        disabled={true}
       >
         {loading ? "Sending Emails..." : "Send Results Emails"}
       </button>

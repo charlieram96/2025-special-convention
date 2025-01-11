@@ -238,7 +238,10 @@ export default function Audition() {
           <p>Loading audition data...</p>
         ) : (
           <div>
-            {filteredList.map((auditionee, index) => (
+            {searchTerm === "" ? (
+                <p>Please enter a name or number above to see results.</p>
+              ) : 
+              (filteredList.map((auditionee, index) => (
               <div
                 key={`${auditionee.auditioneeNumber}-${index}`}
                 className={styles.auditionee}
@@ -282,7 +285,8 @@ export default function Audition() {
                       {uploadingId === auditionee.auditioneeNumber ? (
                         "Uploading..."
                       ) : (
-                        <img src={uploadIcon.src} alt="upload icon" />
+                        // <img src="/public/upload-icon.svg" alt="upload icon" />
+                        `Upload image`
                       )}
                     </button>
                   </label>
@@ -299,12 +303,11 @@ export default function Audition() {
                   <div className={styles.row}>
                     <div className={styles.auditionee_number}>
                       Number:{" "}
+                      {/* Make the auditioneeNumber readOnly so it's non-editable */}
                       <input
                         type="text"
                         value={auditionee.auditioneeNumber}
-                        onChange={(e) =>
-                          handleInputChange(e, auditionee.auditioneeNumber, "auditioneeNumber")
-                        }
+                        readOnly
                       />
                     </div>
                     <div className={styles.auditionee_name}>
@@ -527,18 +530,24 @@ export default function Audition() {
                   </div>
                   <div>
                     <div className={styles.instrument_category}>Level:</div>
-                    <input
-                      type="text"
+                    <select
+                      className={styles.level_dropdown}
                       value={auditionee.level || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "level")
                       }
                       disabled={!auditionee.auditionTypes.includes("Instrument")}
-                    />
+                    >
+                      <option value="">Select level</option>
+                      <option value="4: Expert">4: Expert</option>
+                      <option value="3: Good">3: Good</option>
+                      <option value="2: Acceptable">2: Acceptable</option>
+                      <option value="1: Deficient">1: Deficient</option>
+                    </select>
                   </div>
                 </div>
               </div>
-            ))}
+            )))}
           </div>
         )}
         <ToastContainer />

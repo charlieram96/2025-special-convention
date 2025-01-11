@@ -121,6 +121,7 @@
     color: var(--foreground);
     transition: .3s ease-out;
     width: 200px;
+    font-weight: 700;
 }
 
 .upload_button:hover {
@@ -376,7 +377,23 @@
 }
 
 .yes_dropdown {
-    width: 70px;
+    width: 140px;
+    margin-left: 5px;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    background-color: #E8FCFF;
+    border: 1.5px solid #C4EBF5;
+    color: var(--foreground);
+    font-family: "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.level_dropdown {
+    width: 140px;
     margin-left: 5px;
     justify-content: center;
     align-items: center;
