@@ -189,19 +189,19 @@ export default function Audition() {
   });
 
   return (
-    // <PasswordProtect>
+    <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
         <img src={logo.src} className={styles.main_logo} alt="logo" />
 
         {/* Navigation Buttons */}
-        <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+        {/* <nav className={styles.nav} style={{ marginBottom: "20px" }}>
           <Link href="../">
             <button className={styles.nav_button}>Home</button>
           </Link>
           <Link href="../results">
             <button className={styles.nav_button}>Results</button>
           </Link>
-        </nav>
+        </nav> */}
 
         <h1>Audition Scoring</h1>
         <input
@@ -552,6 +552,6 @@ export default function Audition() {
         )}
         <ToastContainer />
       </div>
-    // </PasswordProtect>
+    </PasswordProtect>
   );
 }
