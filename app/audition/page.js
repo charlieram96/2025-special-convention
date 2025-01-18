@@ -189,7 +189,7 @@ export default function Audition() {
   });
 
   return (
-    <PasswordProtect>
+    // <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
         <img src={logo.src} className={styles.main_logo} alt="logo" />
 
@@ -552,6 +552,6 @@ export default function Audition() {
         )}
         <ToastContainer />
       </div>
-    </PasswordProtect>
+    // </PasswordProtect>
   );
 }
