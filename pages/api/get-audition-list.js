@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Audition List!A:U", // Adjusted to include all columns
+      range: "Audition List!A:V", // Adjusted to include all columns
     };
 
     const sheetData = await gsapi.spreadsheets.values.get(opt);
@@ -42,7 +42,8 @@ export default async function handler(req, res) {
       judge1Score: row[17],
       judge2Score: row[18],
       judge3Score: row[19],
-      danceLevel: row[20]
+      danceLevel: row[20],
+      harmonyLink: row[21]
       // Add any additional fields here
     }));
 

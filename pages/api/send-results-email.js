@@ -52,7 +52,7 @@ export default async function handler(req, res) {
     // Fetch Audition List
     const auditionListOpt = {
       spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
-      range: "Audition List!A:O", // Assuming result is in Column O
+      range: "Audition List!A:V", // Assuming result is in Column O
     };
     const auditionData = await gsapi.spreadsheets.values.get(auditionListOpt);
     const rows = auditionData.data.values;

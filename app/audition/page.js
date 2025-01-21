@@ -130,6 +130,8 @@ export default function Audition() {
           judge3Score: aud.judge3Score || "",
           // Add a "danceLevel" field if not present
           danceLevel: aud.danceLevel || "",
+          // Also fetch harmonyLink
+          harmonyLink: aud.harmonyLink || "",
         }));
         setAuditionList(initializedData);
         setLoading(false);
@@ -190,58 +192,58 @@ export default function Audition() {
 
   return (
     // <PasswordProtect>
-      <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
-        <img src={logo.src} className={styles.main_logo} alt="logo" />
+    <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
+      <img src={logo.src} className={styles.main_logo} alt="logo" />
 
-        {/* Navigation Buttons */}
-        {/* <nav className={styles.nav} style={{ marginBottom: "20px" }}>
-          <Link href="../">
-            <button className={styles.nav_button}>Home</button>
-          </Link>
-          <Link href="../results">
-            <button className={styles.nav_button}>Results</button>
-          </Link>
-        </nav> */}
+      {/* Navigation Buttons */}
+      {/* <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+        <Link href="../">
+          <button className={styles.nav_button}>Home</button>
+        </Link>
+        <Link href="../results">
+          <button className={styles.nav_button}>Results</button>
+        </Link>
+      </nav> */}
 
-        <h1>Audition Scoring</h1>
-        <input
-          type="text"
-          placeholder="Search by number or name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className={styles.audition_search}
-        />
+      <h1>Audition Scoring</h1>
+      <input
+        type="text"
+        placeholder="Search by number or name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className={styles.audition_search}
+      />
 
-        {/* Filter Buttons */}
-        <div style={{ marginBottom: "20px" }} className={styles.filter_buttons}>
-          {["Vocals", "Instrument", "Dance"].map((type) => (
-            <button
-              key={type}
-              onClick={() => toggleFilter(type)}
-              style={{
-                padding: "10px 20px",
-                fontSize: "16px",
-                margin: "0 5px",
-                backgroundColor: filterTypes[type] ? "#0088AD" : "#addbe3",
-                color: filterTypes[type] ? "#fff" : "#fff",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
+      {/* Filter Buttons */}
+      <div style={{ marginBottom: "20px" }} className={styles.filter_buttons}>
+        {["Vocals", "Instrument", "Dance"].map((type) => (
+          <button
+            key={type}
+            onClick={() => toggleFilter(type)}
+            style={{
+              padding: "10px 20px",
+              fontSize: "16px",
+              margin: "0 5px",
+              backgroundColor: filterTypes[type] ? "#0088AD" : "#addbe3",
+              color: filterTypes[type] ? "#fff" : "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            {type}
+          </button>
+        ))}
+      </div>
 
-        {loading ? (
-          <p>Loading audition data...</p>
-        ) : (
-          <div>
-            {searchTerm === "" ? (
-                <p>Please enter a name or number above to see results.</p>
-              ) : 
-              (filteredList.map((auditionee, index) => (
+      {loading ? (
+        <p>Loading audition data...</p>
+      ) : (
+        <div>
+          {searchTerm === "" ? (
+            <p>Please enter a name or number above to see results.</p>
+          ) : (
+            filteredList.map((auditionee, index) => (
               <div
                 key={`${auditionee.auditioneeNumber}-${index}`}
                 className={styles.auditionee}
@@ -272,9 +274,7 @@ export default function Audition() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={(e) =>
-                        handleImageUpload(e, auditionee.auditioneeNumber)
-                      }
+                      onChange={(e) => handleImageUpload(e, auditionee.auditioneeNumber)}
                       style={{ display: "none" }}
                     />
                     <button
@@ -282,12 +282,9 @@ export default function Audition() {
                       disabled={uploadingId === auditionee.auditioneeNumber}
                       className={styles.upload_button}
                     >
-                      {uploadingId === auditionee.auditioneeNumber ? (
-                        "Uploading..."
-                      ) : (
-                        // <img src="/public/upload-icon.svg" alt="upload icon" />
-                        `Upload image`
-                      )}
+                      {uploadingId === auditionee.auditioneeNumber
+                        ? "Uploading..."
+                        : `Upload image`}
                     </button>
                   </label>
                 </div>
@@ -304,11 +301,7 @@ export default function Audition() {
                     <div className={styles.auditionee_number}>
                       Number:{" "}
                       {/* Make the auditioneeNumber readOnly so it's non-editable */}
-                      <input
-                        type="text"
-                        value={auditionee.auditioneeNumber}
-                        readOnly
-                      />
+                      <input type="text" value={auditionee.auditioneeNumber} readOnly />
                     </div>
                     <div className={styles.auditionee_name}>
                       Name:{" "}
@@ -374,6 +367,18 @@ export default function Audition() {
                       value={auditionee.auditionLink || ""}
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "auditionLink")
+                      }
+                    />
+                  </div>
+
+                  {/* NEW: Harmony Link Input */}
+                  <div className={styles.audition_link}>
+                    Harmony Link:{" "}
+                    <input
+                      type="text"
+                      value={auditionee.harmonyLink || ""}
+                      onChange={(e) =>
+                        handleInputChange(e, auditionee.auditioneeNumber, "harmonyLink")
                       }
                     />
                   </div>
@@ -547,11 +552,12 @@ export default function Audition() {
                   </div>
                 </div>
               </div>
-            )))}
-          </div>
-        )}
-        <ToastContainer />
-      </div>
+            ))
+          )}
+        </div>
+      )}
+      <ToastContainer />
+    </div>
     // </PasswordProtect>
   );
 }

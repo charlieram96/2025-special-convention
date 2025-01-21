@@ -40,6 +40,8 @@ export default function Results() {
           judge1Score: auditionee.judge1Score || "",
           judge2Score: auditionee.judge2Score || "",
           judge3Score: auditionee.judge3Score || "",
+          // Make sure to include `harmonyLink` from the server if it exists
+          harmonyLink: auditionee.harmonyLink || "",
         }));
 
         setAuditionList(initializedData);
@@ -104,7 +106,7 @@ export default function Results() {
     }
   }, [auditionList, loading, selectedAuditionType]);
 
-  // Filtering the audition list based on the selected filter options
+  // Filter auditionees based on the selected filter options
   const filteredAuditionList = auditionList.filter((auditionee) => {
     if (!selectedAuditionType) return false; // If no type selected, skip
 
@@ -125,38 +127,6 @@ export default function Results() {
   if (!selectedAuditionType) {
     return (
       // <PasswordProtect>
-        <div style={{ textAlign: "center" }} className={styles.results_wrap}>
-          <img src={logo.src} className={styles.main_logo} alt="logo" />
-
-          {/* Navigation Buttons */}
-          <nav className={styles.nav} style={{ marginBottom: "20px" }}>
-            <Link href="../">
-              <button className={styles.nav_button}>Home</button>
-            </Link>
-            <Link href="../audition">
-              <button className={styles.nav_button}>Audition</button>
-            </Link>
-          </nav>
-
-          <h1>Select Audition Type</h1>
-          <div className={styles.selection_buttons}>
-            {["Vocals", "Instrument", "Dance"].map((type) => (
-              <button
-                key={type}
-                onClick={() => setSelectedAuditionType(type)}
-                className={styles.selection_button}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-        </div>
-      // </PasswordProtect>
-    );
-  }
-
-  return (
-    // <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.results_wrap}>
         <img src={logo.src} className={styles.main_logo} alt="logo" />
 
@@ -170,213 +140,250 @@ export default function Results() {
           </Link>
         </nav>
 
-        <h1>{selectedAuditionType} Auditions</h1>
-
-        {/* Metrics Section */}
-        <div className={styles.metrics}>
-          <div className={styles.metrics_item}>
-            <span className={styles.metrics_label}>Total Auditionees:</span>
-            <span className={styles.metrics_value}>{metrics.total}</span>
-          </div>
-          <div className={styles.metrics_item}>
-            <span className={styles.metrics_label}>Accepted:</span>
-            <span className={styles.metrics_value}>{metrics.accepted}</span>
-          </div>
-          <div className={styles.metrics_item}>
-            <span className={styles.metrics_label}>Declined:</span>
-            <span className={styles.metrics_value}>{metrics.declined}</span>
-          </div>
-          <div className={styles.metrics_item}>
-            <span className={styles.metrics_label}>Backup:</span>
-            <span className={styles.metrics_value}>{metrics.backup}</span>
-          </div>
-          <div className={styles.metrics_item}>
-            <span className={styles.metrics_label}>Pending:</span>
-            <span className={styles.metrics_value}>{metrics.pending}</span>
-          </div>
-        </div>
-
-        <div className={styles.filter_title}>Filters</div>
-
-        {/* Result Filter Buttons */}
-        <div className={styles.result_filter_buttons}>
-          {["All", "Accept", "Decline", "Backup", "Pending"].map((option) => (
+        <h1>Select Audition Type</h1>
+        <div className={styles.selection_buttons}>
+          {["Vocals", "Instrument", "Dance"].map((type) => (
             <button
-              key={option}
-              onClick={() => setResultFilter(option)}
-              className={`${styles.filter_button} ${
-                resultFilter === option ? styles.active_button : ""
-              }`}
+              key={type}
+              onClick={() => setSelectedAuditionType(type)}
+              className={styles.selection_button}
             >
-              {option}
+              {type}
             </button>
           ))}
         </div>
+      </div>
+      // </PasswordProtect>
+    );
+  }
 
-        {loading ? (
-          <p>Loading audition data...</p>
-        ) : (
-          <div>
-            {filteredAuditionList.map((auditionee) => {
-              // Compute average judge score
-              // Convert to numbers if possible, otherwise treat as 0
-              const j1 = parseFloat(auditionee.judge1Score) || 0;
-              const j2 = parseFloat(auditionee.judge2Score) || 0;
-              const j3 = parseFloat(auditionee.judge3Score) || 0;
-              const averageScore = ((j1 + j2 + j3) / 3).toFixed(2); // Round to 2 decimals
+  return (
+    // <PasswordProtect>
+    <div style={{ textAlign: "center" }} className={styles.results_wrap}>
+      <img src={logo.src} className={styles.main_logo} alt="logo" />
 
-              return (
-                <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
-                  {/* Profile Image */}
-                  <div className={styles.profile_image_wrap}>
-                    {auditionee.imageLink ? (
-                      <img
-                        src={auditionee.imageLink}
-                        alt={`${auditionee.name}'s image`}
-                        className={styles.profile_image}
-                      />
-                    ) : (
-                      <img
-                        src={profileBlank.src}
-                        alt="placeholder image"
-                        className={styles.profile_image}
-                      />
-                    )}
-                  </div>
+      {/* Navigation Buttons */}
+      <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+        <Link href="../">
+          <button className={styles.nav_button}>Home</button>
+        </Link>
+        <Link href="../audition">
+          <button className={styles.nav_button}>Audition</button>
+        </Link>
+      </nav>
 
-                  {/* Auditionee Information */}
-                  <div className={styles.auditionee_info}>
-                    <div className={styles.row}>
-                      <div className={styles.auditionee_number}>
-                        Number:{" "}
-                        <span className={styles.input_mimic}>{auditionee.auditioneeNumber}</span>
-                      </div>
-                      <div className={styles.auditionee_name}>
-                        Name:{" "}
-                        <span className={styles.input_mimic}>{auditionee.name}</span>
-                      </div>
-                    </div>
-                    <div className={styles.audition_type}>
-                      Auditioning for:{" "}
-                      <span className={styles.input_mimic}>
-                        {auditionee.auditionTypes.join(", ")}
-                      </span>
-                    </div>
-                    <div className={styles.congregation}>
-                      Congregation:{" "}
-                      <span className={styles.input_mimic}>
-                        {auditionee.congregation || "N/A"}
-                      </span>
-                    </div>
-                    <div className={styles.observations}>
-                      <div>Observations:</div>
-                      <div className={styles.input_mimic}>{auditionee.observations || "N/A"}</div>
-                    </div>
-                    <div className={styles.audition_link}>
-                      <div>Audition Link:</div>
-                      <a
-                        target="_blank"
-                        className={styles.input_mimic}
-                        href={auditionee.auditionLink}
-                      >
-                        {auditionee.auditionLink ? "Click here to open" : "N/A"}
-                      </a>
-                    </div>
+      <h1>{selectedAuditionType} Auditions</h1>
 
-                    {/* Judge Scores */}
-                    <div className={styles.judge_scores}>
-                      <div>Judge 1 Score:</div>
-                      <span className={styles.input_mimic}>{auditionee.judge1Score || "N/A"}</span>
-                    </div>
-                    <div className={styles.judge_scores}>
-                      <div>Judge 2 Score:</div>
-                      <span className={styles.input_mimic}>{auditionee.judge2Score || "N/A"}</span>
-                    </div>
-                    <div className={styles.judge_scores}>
-                      <div>Judge 3 Score:</div>
-                      <span className={styles.input_mimic}>{auditionee.judge3Score || "N/A"}</span>
-                    </div>
-                    {/* Average Score */}
-                    <div className={styles.judge_scores}>
-                      <div>Average Score:</div>
-                      <span className={styles.input_mimic}>
-                        {isNaN(averageScore) ? "N/A" : averageScore}
-                      </span>
-                    </div>
-                  </div>
+      {/* Metrics Section */}
+      <div className={styles.metrics}>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Total Auditionees:</span>
+          <span className={styles.metrics_value}>{metrics.total}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Accepted:</span>
+          <span className={styles.metrics_value}>{metrics.accepted}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Declined:</span>
+          <span className={styles.metrics_value}>{metrics.declined}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Backup:</span>
+          <span className={styles.metrics_value}>{metrics.backup}</span>
+        </div>
+        <div className={styles.metrics_item}>
+          <span className={styles.metrics_label}>Pending:</span>
+          <span className={styles.metrics_value}>{metrics.pending}</span>
+        </div>
+      </div>
 
-                  {/* Vocals Section */}
-                  <div
-                    className={`${styles.auditionee_vocals_col} ${
-                      !auditionee.auditionTypes.includes("Vocals") ? styles.reducedOpacity : ""
-                    }`}
-                  >
-                    <div className={styles.col_type}>Vocals</div>
-                    <div>
-                      <div className={styles.category}>Pitch:</div>
-                      <span className={styles.input_mimic}>{auditionee.pitch || "N/A"}</span>
+      <div className={styles.filter_title}>Filters</div>
+
+      {/* Result Filter Buttons */}
+      <div className={styles.result_filter_buttons}>
+        {["All", "Accept", "Decline", "Backup", "Pending"].map((option) => (
+          <button
+            key={option}
+            onClick={() => setResultFilter(option)}
+            className={`${styles.filter_button} ${
+              resultFilter === option ? styles.active_button : ""
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <p>Loading audition data...</p>
+      ) : (
+        <div>
+          {filteredAuditionList.map((auditionee) => {
+            // Compute average judge score (if numeric)
+            const j1 = parseFloat(auditionee.judge1Score) || 0;
+            const j2 = parseFloat(auditionee.judge2Score) || 0;
+            const j3 = parseFloat(auditionee.judge3Score) || 0;
+            const averageScore = ((j1 + j2 + j3) / 3).toFixed(2);
+
+            return (
+              <div key={auditionee.auditioneeNumber} className={styles.auditionee}>
+                {/* Profile Image */}
+                <div className={styles.profile_image_wrap}>
+                  {auditionee.imageLink ? (
+                    <img
+                      src={auditionee.imageLink}
+                      alt={`${auditionee.name}'s image`}
+                      className={styles.profile_image}
+                    />
+                  ) : (
+                    <img
+                      src={profileBlank.src}
+                      alt="placeholder image"
+                      className={styles.profile_image}
+                    />
+                  )}
+                </div>
+
+                {/* Auditionee Information */}
+                <div className={styles.auditionee_info}>
+                  <div className={styles.row}>
+                    <div className={styles.auditionee_number}>
+                      Number:{" "}
+                      <span className={styles.input_mimic}>{auditionee.auditioneeNumber}</span>
                     </div>
-                    <div>
-                      <div className={styles.category}>Rhythm:</div>
-                      <span className={styles.input_mimic}>{auditionee.rhythm || "N/A"}</span>
-                    </div>
-                    <div className={styles.rov}>
-                      <div className={styles.category}>ROV:</div>
-                      <span className={styles.input_mimic}>
-                        {auditionee.rangeOfVoice || "N/A"}
-                      </span>
-                      <div className={styles.rov_low}>(Range of voice)</div>
-                    </div>
-                    <div>
-                      <div className={styles.category}>Harmony:</div>
-                      <span className={styles.input_mimic}>{auditionee.harmony || "N/A"}</span>
+                    <div className={styles.auditionee_name}>
+                      Name:{" "}
+                      <span className={styles.input_mimic}>{auditionee.name}</span>
                     </div>
                   </div>
-
-                  {/* Instrument Section */}
-                  <div
-                    className={`${styles.auditionee_instrument_col} ${
-                      !auditionee.auditionTypes.includes("Instrument") ? styles.reducedOpacity : ""
-                    }`}
-                  >
-                    <div className={styles.col_type}>Instrument</div>
-                    <div>
-                      <div className={styles.instrument_category}>Instrument:</div>
-                      <span className={styles.input_mimic}>{auditionee.instrument || "N/A"}</span>
-                    </div>
-                    <div>
-                      <div className={styles.instrument_category}>Reading:</div>
-                      <span className={styles.input_mimic}>{auditionee.reading || "N/A"}</span>
-                    </div>
-                    <div>
-                      <div className={styles.instrument_category}>Level:</div>
-                      <span className={styles.input_mimic}>{auditionee.level || "N/A"}</span>
-                    </div>
+                  <div className={styles.audition_type}>
+                    Auditioning for:{" "}
+                    <span className={styles.input_mimic}>
+                      {auditionee.auditionTypes.join(", ")}
+                    </span>
+                  </div>
+                  <div className={styles.congregation}>
+                    Congregation:{" "}
+                    <span className={styles.input_mimic}>{auditionee.congregation || "N/A"}</span>
+                  </div>
+                  <div className={styles.observations}>
+                    <div>Observations:</div>
+                    <div className={styles.input_mimic}>{auditionee.observations || "N/A"}</div>
                   </div>
 
-                  {/* Result Buttons */}
-                  <div className={styles.result_buttons}>
-                    {["Accept", "Decline", "Backup"].map((option) => (
-                      <button
-                        key={option}
-                        onClick={() => handleResultUpdate(auditionee.auditioneeNumber, option)}
-                        className={`${styles.result_button} ${
-                          auditionee.result === option ? styles.selected_button : ""
-                        }`}
-                        disabled={buttonLoading[auditionee.auditioneeNumber] === option}
-                      >
-                        {buttonLoading[auditionee.auditioneeNumber] === option
-                          ? "Loading..."
-                          : option}
-                      </button>
-                    ))}
+                  {/* Audition Link */}
+                  <div className={styles.audition_link}>
+                    <div>Audition Link:</div>
+                    <a target="_blank" className={styles.input_mimic} href={auditionee.auditionLink}>
+                      {auditionee.auditionLink ? "Click here to open" : "N/A"}
+                    </a>
+                  </div>
+
+                  {/* NEW: Harmony Link */}
+                  <div className={styles.audition_link}>
+                    <div>Harmony Link:</div>
+                    <a
+                      target="_blank"
+                      className={styles.input_mimic}
+                      href={auditionee.harmonyLink}
+                    >
+                      {auditionee.harmonyLink ? "Click here to open" : "N/A"}
+                    </a>
+                  </div>
+
+                  {/* Judge Scores */}
+                  <div className={styles.judge_scores}>
+                    <div>Judge 1 Score:</div>
+                    <span className={styles.input_mimic}>{auditionee.judge1Score || "N/A"}</span>
+                  </div>
+                  <div className={styles.judge_scores}>
+                    <div>Judge 2 Score:</div>
+                    <span className={styles.input_mimic}>{auditionee.judge2Score || "N/A"}</span>
+                  </div>
+                  <div className={styles.judge_scores}>
+                    <div>Judge 3 Score:</div>
+                    <span className={styles.input_mimic}>{auditionee.judge3Score || "N/A"}</span>
+                  </div>
+                  {/* Average Score */}
+                  <div className={styles.judge_scores}>
+                    <div>Average Score:</div>
+                    <span className={styles.input_mimic}>
+                      {isNaN(averageScore) ? "N/A" : averageScore}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+
+                {/* Vocals Section */}
+                <div
+                  className={`${styles.auditionee_vocals_col} ${
+                    !auditionee.auditionTypes.includes("Vocals") ? styles.reducedOpacity : ""
+                  }`}
+                >
+                  <div className={styles.col_type}>Vocals</div>
+                  <div>
+                    <div className={styles.category}>Pitch:</div>
+                    <span className={styles.input_mimic}>{auditionee.pitch || "N/A"}</span>
+                  </div>
+                  <div>
+                    <div className={styles.category}>Rhythm:</div>
+                    <span className={styles.input_mimic}>{auditionee.rhythm || "N/A"}</span>
+                  </div>
+                  <div className={styles.rov}>
+                    <div className={styles.category}>ROV:</div>
+                    <span className={styles.input_mimic}>{auditionee.rangeOfVoice || "N/A"}</span>
+                    <div className={styles.rov_low}>(Range of voice)</div>
+                  </div>
+                  <div>
+                    <div className={styles.category}>Harmony:</div>
+                    <span className={styles.input_mimic}>{auditionee.harmony || "N/A"}</span>
+                  </div>
+                </div>
+
+                {/* Instrument Section */}
+                <div
+                  className={`${styles.auditionee_instrument_col} ${
+                    !auditionee.auditionTypes.includes("Instrument") ? styles.reducedOpacity : ""
+                  }`}
+                >
+                  <div className={styles.col_type}>Instrument</div>
+                  <div>
+                    <div className={styles.instrument_category}>Instrument:</div>
+                    <span className={styles.input_mimic}>{auditionee.instrument || "N/A"}</span>
+                  </div>
+                  <div>
+                    <div className={styles.instrument_category}>Reading:</div>
+                    <span className={styles.input_mimic}>{auditionee.reading || "N/A"}</span>
+                  </div>
+                  <div>
+                    <div className={styles.instrument_category}>Level:</div>
+                    <span className={styles.input_mimic}>{auditionee.level || "N/A"}</span>
+                  </div>
+                </div>
+
+                {/* Result Buttons */}
+                <div className={styles.result_buttons}>
+                  {["Accept", "Decline", "Backup"].map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => handleResultUpdate(auditionee.auditioneeNumber, option)}
+                      className={`${styles.result_button} ${
+                        auditionee.result === option ? styles.selected_button : ""
+                      }`}
+                      disabled={buttonLoading[auditionee.auditioneeNumber] === option}
+                    >
+                      {buttonLoading[auditionee.auditioneeNumber] === option
+                        ? "Loading..."
+                        : option}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
     // </PasswordProtect>
   );
 }
