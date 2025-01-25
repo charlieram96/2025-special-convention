@@ -74,7 +74,7 @@ export default function Send() {
       <img src={logo.src} className={styles.logo} alt="logo" />
       <h1>Send audition invite email</h1>
       {/* <button onClick={sendTestEmail} disabled={isSending}> */}
-      <button onClick={sendTestEmail} disabled={true}>
+      <button onClick={sendTestEmail}>
         {isSending ? 'Sending...' : 'Send Email'}
       </button>
       {message && <p>{message}</p>}
@@ -86,7 +86,7 @@ export default function Send() {
         onClick={handleSendResultsEmails}
         style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
         // disabled={loading}
-        disabled={true}
+        // disabled={true}
       >
         {loading ? "Sending Emails..." : "Send Results Emails"}
       </button>
