@@ -249,16 +249,16 @@ export default async function handler(req, res) {
               </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="b35b8ff4-8b3c-4b35-9ed3-f9f25170affc" data-mc-module-version="2019-10-22">
                 <tbody>
                   <tr>
-                    <td style="padding:40px 20px 18px 20px; line-height:28px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #0088ad; font-size: 28px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif"><strong>Welcome</strong></span></div>
+                    <td style="padding:40px 20px 18px 20px; line-height:28px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #0088ad; font-size: 28px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif"><strong>¡Bienvenido!</strong></span></div>
             <div style="font-family: inherit; text-align: center"><span style="color: #0088ad; font-size: 14px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">Fort Lauderdale 2025</span></div><div></div></div></td>
                   </tr>
                 </tbody>
               </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="f758d404-9b02-4e87-937f-cccaa46787a6" data-mc-module-version="2019-10-22">
                 <tbody>
                   <tr>
-                    <td style="padding:38px 60px 18px 60px; line-height:26px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: left"><span style="color: #273159; font-size: 16px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">Dear ${name},
+                    <td style="padding:38px 60px 18px 60px; line-height:26px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: left"><span style="color: #273159; font-size: 16px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">Hola ${name},
                         <br><br>
-                        You have been selected to audition for talent for the 2025 Fort Lauderdale special convention! We are very excited for you to join us. Please review the information below and RSVP.</span></div><div></div></div></td>
+                        Nos complace informarte que has sido invitado a asistir a nuestra tarde de esparcimiento para la Asamblea Especial de Fort Lauderdale 2025! A continuación tendrás tu código QR único que servirá como tu tiquete de entrada.</span></div><div></div></div></td>
                   </tr>
                 </tbody>
               </table><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="3757586a-ce69-48ba-bd9a-0c0b7937a616">
@@ -285,23 +285,13 @@ export default async function handler(req, res) {
                   <tbody>
                     <tr>
                     <td style="padding:18px 60px 18px 60px; line-height:26px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: left"><span style="color: #273159; font-size: 16px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">
-                    Date: Saturday, June 15, 2024
+                    Date: Martes, Agosto 12, 2025
                     <br>
-                    Location: Uleta Hall
+                    Ubicación: Uleta Hall
                     <br>
-                    Address: 14521 Memorial Hwy, Miami, FL 33161
+                    Dirección: 1610 Palm Beach Lakes Blvd, West Palm Beach, FL 33401
                     <br>
-                    Check-in: 9:30 AM
-                    <br>
-                    Opening Prayer & Workshop Start: 10:00 AM
-                    <br>
-                    Branch Spiritual Point: 1:00 PM
-                    <br>
-                    Production Content Rehearsal: 1:30 PM
-                    <br>
-                    Adjourn & Cleaning: 6:00 PM
-                    <br><br>
-                    The following QR code will serve as your ticket of entry:
+                    Hora: 9am - 2pm
                     </td>
                   </tr>
                   <tr>

@@ -63,33 +63,32 @@ export default function Send() {
   return (
     // <PasswordProtect>
     <div className={styles.page_wrap}>
-      <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+      {/* <nav className={styles.nav} style={{ marginBottom: "20px" }}>
         <Link href="./audition">
           <button className={styles.nav_button}>Audition</button>
         </Link>
         <Link href="./results">
           <button className={styles.nav_button}>Results</button>
         </Link>
-      </nav>
+      </nav> */}
       <img src={logo.src} className={styles.logo} alt="logo" />
-      <h1>Send audition invite email</h1>
+      <h1>Send invite email</h1>
       {/* <button onClick={sendTestEmail} disabled={isSending}> */}
       <button onClick={sendTestEmail}>
         {isSending ? 'Sending...' : 'Send Email'}
       </button>
       {message && <p>{message}</p>}
       
-      <h1>
+      {/* <h1>
         Send audition result email
       </h1>
       <button
         onClick={handleSendResultsEmails}
         style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
-        // disabled={loading}
-        // disabled={true}
+        
       >
         {loading ? "Sending Emails..." : "Send Results Emails"}
-      </button>
+      </button> */}
     </div>
     // </PasswordProtect>
 
