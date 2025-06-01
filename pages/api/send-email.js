@@ -267,16 +267,6 @@ export default async function handler(req, res) {
                       <td align="center" bgcolor="" class="outer-td" style="padding:0px 0px 40px 0px;">
                         <table border="0" cellpadding="0" cellspacing="0" class="wrapper-mobile" style="text-align:center;">
                           <tbody>
-                            <tr>
-                            <td align="center" bgcolor="#ffea05" class="inner-td" style="font-family:lucida sans unicode,lucida grande,sans-serif; margin: 20px 0 10px 0 !important; display: block; font-size:16px; text-align:center; background-color:inherit; color: #273159;">
-                              Your TicketID: <b>${ticketId}</b>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td align="center" bgcolor="#ffea05" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
-                              <a href="https://2025-special-convention.vercel.app/rsvp-audition?ticketId=${ticketId}" style="background-color:#F7AB54; color: #fff; border-radius:0px; border: none !important; display:inline-block; font-size:16px; font-weight:700; letter-spacing:0px; line-height:normal; padding:12px 40px 12px 40px; text-align:center; text-decoration:none; border-style:solid; font-family:lucida sans unicode,lucida grande,sans-serif;" target="_blank">Click here to RSVP</a>
-                            </td>
-                            </tr>
                           </tbody>
                         </table>
                       </td>
@@ -287,7 +277,7 @@ export default async function handler(req, res) {
                     <td style="padding:18px 60px 18px 60px; line-height:26px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: left"><span style="color: #273159; font-size: 16px; font-family: &quot;lucida sans unicode&quot;, &quot;lucida grande&quot;, sans-serif">
                     Date: Martes, Agosto 12, 2025
                     <br>
-                    Ubicación: Uleta Hall
+                    Ubicación: West Palm Beach Christian Convention Center of Jehovah's Witnesses
                     <br>
                     Dirección: 1610 Palm Beach Lakes Blvd, West Palm Beach, FL 33401
                     <br>
