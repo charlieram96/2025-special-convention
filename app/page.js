@@ -74,10 +74,10 @@ export default function Send() {
       <img src={logo.src} className={styles.logo} alt="logo" />
       {/* <h1>Send invite email</h1> */}
       {/* <button onClick={sendTestEmail} disabled={isSending}> */}
-      <button onClick={sendTestEmail}>
+      {/* <button onClick={sendTestEmail}>
         {isSending ? 'Sending...' : 'Send Email'}
       </button>
-      {message && <p>{message}</p>}
+      {message && <p>{message}</p>} */}
       
       {/* <h1>
         Send audition result email
