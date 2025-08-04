@@ -72,7 +72,7 @@ export default function Send() {
         </Link>
       </nav> */}
       <img src={logo.src} className={styles.logo} alt="logo" />
-      <h1>Send invite email</h1>
+      {/* <h1>Send invite email</h1> */}
       {/* <button onClick={sendTestEmail} disabled={isSending}> */}
       <button onClick={sendTestEmail}>
         {isSending ? 'Sending...' : 'Send Email'}
