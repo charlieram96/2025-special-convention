@@ -651,7 +651,7 @@ export default function Audition() {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -661,20 +661,34 @@ export default function Audition() {
         >
           <div
             style={{
-              backgroundColor: "#fff",
-              padding: "30px",
-              borderRadius: "10px",
-              maxWidth: "500px",
+              backgroundColor: "#ffffff",
+              padding: "40px",
+              borderRadius: "15px",
+              maxWidth: "550px",
               width: "90%",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 style={{ marginBottom: "20px", color: "#333" }}>New Auditionee Registration</h2>
+            <h2 style={{ 
+              marginBottom: "25px", 
+              color: "#0088AD", 
+              fontSize: "24px",
+              fontWeight: "700",
+              textAlign: "center"
+            }}>
+              New Auditionee Registration
+            </h2>
             
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600", color: "#333" }}>
-                Name: <span style={{ color: "red" }}>*</span>
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ 
+                display: "block", 
+                marginBottom: "8px", 
+                fontWeight: "700", 
+                color: "#333",
+                fontSize: "14px"
+              }}>
+                Name <span style={{ color: "#e74c3c" }}>*</span>
               </label>
               <input
                 type="text"
@@ -682,18 +696,31 @@ export default function Audition() {
                 onChange={(e) => setNewAuditionee({ ...newAuditionee, name: e.target.value })}
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  fontSize: "14px",
+                  padding: "12px 15px",
+                  borderRadius: "8px",
+                  border: "2px solid #C4EBF5",
+                  fontSize: "15px",
+                  backgroundColor: "#ffffff",
+                  color: "#333",
+                  fontFamily: '"Noto Sans", sans-serif',
+                  transition: "border-color 0.3s ease",
+                  outline: "none",
                 }}
                 placeholder="Enter full name"
+                onFocus={(e) => e.target.style.borderColor = "#0088AD"}
+                onBlur={(e) => e.target.style.borderColor = "#C4EBF5"}
               />
             </div>
 
-            <div style={{ marginBottom: "15px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600", color: "#333" }}>
-                Email:
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ 
+                display: "block", 
+                marginBottom: "8px", 
+                fontWeight: "700", 
+                color: "#333",
+                fontSize: "14px"
+              }}>
+                Email
               </label>
               <input
                 type="email"
@@ -701,30 +728,50 @@ export default function Audition() {
                 onChange={(e) => setNewAuditionee({ ...newAuditionee, email: e.target.value })}
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  fontSize: "14px",
+                  padding: "12px 15px",
+                  borderRadius: "8px",
+                  border: "2px solid #C4EBF5",
+                  fontSize: "15px",
+                  backgroundColor: "#ffffff",
+                  color: "#333",
+                  fontFamily: '"Noto Sans", sans-serif',
+                  transition: "border-color 0.3s ease",
+                  outline: "none",
                 }}
                 placeholder="Enter email (optional)"
+                onFocus={(e) => e.target.style.borderColor = "#0088AD"}
+                onBlur={(e) => e.target.style.borderColor = "#C4EBF5"}
               />
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600", color: "#333" }}>
-                Category: <span style={{ color: "red" }}>*</span>
+            <div style={{ marginBottom: "30px" }}>
+              <label style={{ 
+                display: "block", 
+                marginBottom: "8px", 
+                fontWeight: "700", 
+                color: "#333",
+                fontSize: "14px"
+              }}>
+                Category <span style={{ color: "#e74c3c" }}>*</span>
               </label>
               <select
                 value={newAuditionee.category}
                 onChange={(e) => setNewAuditionee({ ...newAuditionee, category: e.target.value })}
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  border: "1px solid #ccc",
-                  fontSize: "14px",
+                  padding: "12px 15px",
+                  borderRadius: "8px",
+                  border: "2px solid #C4EBF5",
+                  fontSize: "15px",
+                  backgroundColor: "#ffffff",
+                  color: "#333",
+                  fontFamily: '"Noto Sans", sans-serif',
                   cursor: "pointer",
+                  outline: "none",
+                  fontWeight: "600",
                 }}
+                onFocus={(e) => e.target.style.borderColor = "#0088AD"}
+                onBlur={(e) => e.target.style.borderColor = "#C4EBF5"}
               >
                 <option value="Vocals">Vocals (V-)</option>
                 <option value="Dance">Dance (D-)</option>
@@ -732,7 +779,7 @@ export default function Audition() {
               </select>
             </div>
 
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", gap: "15px", justifyContent: "flex-end" }}>
               <button
                 onClick={() => {
                   setShowModal(false);
@@ -740,15 +787,18 @@ export default function Audition() {
                 }}
                 disabled={isSubmitting}
                 style={{
-                  padding: "10px 20px",
-                  fontSize: "14px",
-                  backgroundColor: "#ccc",
-                  color: "#333",
+                  padding: "12px 25px",
+                  fontSize: "15px",
+                  backgroundColor: "#e0e0e0",
+                  color: "#555",
                   border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  fontWeight: "600",
+                  borderRadius: "8px",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
+                  fontWeight: "700",
+                  transition: "background-color 0.3s ease",
                 }}
+                onMouseOver={(e) => !isSubmitting && (e.target.style.backgroundColor = "#d0d0d0")}
+                onMouseOut={(e) => e.target.style.backgroundColor = "#e0e0e0"}
               >
                 Cancel
               </button>
@@ -756,16 +806,19 @@ export default function Audition() {
                 onClick={handleAddNewAuditionee}
                 disabled={isSubmitting}
                 style={{
-                  padding: "10px 20px",
-                  fontSize: "14px",
+                  padding: "12px 25px",
+                  fontSize: "15px",
                   backgroundColor: "#82ec90",
                   color: "#fff",
                   border: "none",
-                  borderRadius: "5px",
+                  borderRadius: "8px",
                   cursor: isSubmitting ? "not-allowed" : "pointer",
-                  fontWeight: "600",
+                  fontWeight: "700",
                   opacity: isSubmitting ? 0.6 : 1,
+                  transition: "background-color 0.3s ease",
                 }}
+                onMouseOver={(e) => !isSubmitting && (e.target.style.backgroundColor = "#75da82")}
+                onMouseOut={(e) => e.target.style.backgroundColor = "#82ec90"}
               >
                 {isSubmitting ? "Adding..." : "Add Auditionee"}
               </button>
