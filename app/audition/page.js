@@ -24,6 +24,71 @@ export default function Audition() {
     Instrument: false,
     Dance: false,
   });
+  const [showModal, setShowModal] = useState(false);
+  const [newAuditionee, setNewAuditionee] = useState({
+    name: "",
+    email: "",
+    category: "Vocals"
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleAddNewAuditionee = async () => {
+    if (!newAuditionee.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/add-new-auditionee", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newAuditionee),
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success(`New auditionee added: ${data.auditioneeNumber}`);
+        setShowModal(false);
+        setNewAuditionee({ name: "", email: "", category: "Vocals" });
+        
+        // Refresh the audition list
+        const fetchResponse = await fetch("/api/get-audition-list");
+        const fetchData = await fetchResponse.json();
+        const initializedData = (fetchData.auditionList || []).map((aud) => ({
+          ...aud,
+          auditionTypes: aud.auditionType
+            ? aud.auditionType.split(",").map((type) => type.trim())
+            : [],
+          congregation: aud.congregation || "",
+          observations: aud.observations || "",
+          auditionLink: aud.auditionLink || "",
+          pitch: aud.pitch || "",
+          rhythm: aud.rhythm || "",
+          rangeOfVoice: aud.rangeOfVoice || "",
+          harmony: aud.harmony || "",
+          instrument: aud.instrument || "",
+          reading: aud.reading || "",
+          level: aud.level || "",
+          judge1Score: aud.judge1Score || "",
+          judge2Score: aud.judge2Score || "",
+          judge3Score: aud.judge3Score || "",
+          danceLevel: aud.danceLevel || "",
+          harmonyLink: aud.harmonyLink || "",
+        }));
+        setAuditionList(initializedData);
+      } else {
+        toast.error(data.message || "Failed to add new auditionee");
+      }
+    } catch (error) {
+      console.error("Error adding new auditionee:", error);
+      toast.error("An error occurred while adding new auditionee.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSave = async (auditionee) => {
     try {
@@ -206,6 +271,26 @@ export default function Audition() {
       </nav> */}
 
       <h1>Audition Scoring</h1>
+      
+      {/* New Register Button */}
+      <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", paddingRight: "30px", marginBottom: "10px" }}>
+        <button
+          onClick={() => setShowModal(true)}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#F5A343",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontWeight: "700",
+          }}
+        >
+          + New Register
+        </button>
+      </div>
+
       <input
         type="text"
         placeholder="Search by number or name"
@@ -556,6 +641,139 @@ export default function Audition() {
           )}
         </div>
       )}
+      
+      {/* Modal for New Auditionee */}
+      {showModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "30px",
+              borderRadius: "10px",
+              maxWidth: "500px",
+              width: "90%",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{ marginBottom: "20px", color: "#333" }}>New Auditionee Registration</h2>
+            
+            <div style={{ marginBottom: "15px" }}>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600", color: "#333" }}>
+                Name: <span style={{ color: "red" }}>*</span>
+              </label>
+              <input
+                type="text"
+                value={newAuditionee.name}
+                onChange={(e) => setNewAuditionee({ ...newAuditionee, name: e.target.value })}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  border: "1px solid #ccc",
+                  fontSize: "14px",
+                }}
+                placeholder="Enter full name"
+              />
+            </div>
+
+            <div style={{ marginBottom: "15px" }}>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600", color: "#333" }}>
+                Email:
+              </label>
+              <input
+                type="email"
+                value={newAuditionee.email}
+                onChange={(e) => setNewAuditionee({ ...newAuditionee, email: e.target.value })}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  border: "1px solid #ccc",
+                  fontSize: "14px",
+                }}
+                placeholder="Enter email (optional)"
+              />
+            </div>
+
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "5px", fontWeight: "600", color: "#333" }}>
+                Category: <span style={{ color: "red" }}>*</span>
+              </label>
+              <select
+                value={newAuditionee.category}
+                onChange={(e) => setNewAuditionee({ ...newAuditionee, category: e.target.value })}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  border: "1px solid #ccc",
+                  fontSize: "14px",
+                  cursor: "pointer",
+                }}
+              >
+                <option value="Vocals">Vocals (V-)</option>
+                <option value="Dance">Dance (D-)</option>
+                <option value="Instrument">Instrument (I-)</option>
+              </select>
+            </div>
+
+            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setNewAuditionee({ name: "", email: "", category: "Vocals" });
+                }}
+                disabled={isSubmitting}
+                style={{
+                  padding: "10px 20px",
+                  fontSize: "14px",
+                  backgroundColor: "#ccc",
+                  color: "#333",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddNewAuditionee}
+                disabled={isSubmitting}
+                style={{
+                  padding: "10px 20px",
+                  fontSize: "14px",
+                  backgroundColor: "#82ec90",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
+                  fontWeight: "600",
+                  opacity: isSubmitting ? 0.6 : 1,
+                }}
+              >
+                {isSubmitting ? "Adding..." : "Add Auditionee"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <ToastContainer />
     </div>
     // </PasswordProtect>
