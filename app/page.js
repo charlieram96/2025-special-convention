@@ -68,28 +68,30 @@ export default function Send() {
       {/* Database Selection Section */}
       <div style={{ 
         marginBottom: "30px", 
-        textAlign: "center",
-        padding: "20px"
+        padding: "20px",
+        maxWidth: "100%"
       }}>
         <h2 style={{ 
           color: "#0088AD", 
           marginBottom: "20px",
           fontSize: "24px",
-          fontWeight: "700"
+          fontWeight: "700",
+          textAlign: "left"
         }}>
           Select Convention Database
         </h2>
         <div style={{ 
           display: "flex", 
-          gap: "20px", 
-          justifyContent: "center",
-          flexWrap: "wrap"
+          gap: "15px", 
+          justifyContent: "flex-start",
+          flexWrap: "wrap",
+          alignItems: "center"
         }}>
           <button
             onClick={() => selectDatabase(DATABASES.FORT_LAUDERDALE_2025)}
             style={{
-              padding: "15px 30px",
-              fontSize: "18px",
+              padding: "12px 20px",
+              fontSize: "16px",
               fontWeight: "700",
               backgroundColor: selectedDatabase.id === DATABASES.FORT_LAUDERDALE_2025.id ? "#0088AD" : "#addbe3",
               color: "#fff",
@@ -97,7 +99,7 @@ export default function Send() {
               borderRadius: "10px",
               cursor: "pointer",
               transition: "all 0.3s ease",
-              minWidth: "250px"
+              whiteSpace: "nowrap"
             }}
           >
             {DATABASES.FORT_LAUDERDALE_2025.name}
@@ -105,8 +107,8 @@ export default function Send() {
           <button
             onClick={() => selectDatabase(DATABASES.PANAMA_2026)}
             style={{
-              padding: "15px 30px",
-              fontSize: "18px",
+              padding: "12px 20px",
+              fontSize: "16px",
               fontWeight: "700",
               backgroundColor: selectedDatabase.id === DATABASES.PANAMA_2026.id ? "#0088AD" : "#addbe3",
               color: "#fff",
@@ -114,19 +116,19 @@ export default function Send() {
               borderRadius: "10px",
               cursor: "pointer",
               transition: "all 0.3s ease",
-              minWidth: "250px"
+              whiteSpace: "nowrap"
             }}
           >
             {DATABASES.PANAMA_2026.name}
           </button>
+          <p style={{ 
+            margin: "0",
+            color: "#555",
+            fontSize: "14px"
+          }}>
+            Currently: <strong style={{ color: "#0088AD" }}>{selectedDatabase.name}</strong>
+          </p>
         </div>
-        <p style={{ 
-          marginTop: "15px", 
-          color: "#555",
-          fontSize: "16px"
-        }}>
-          Currently selected: <strong style={{ color: "#0088AD" }}>{selectedDatabase.name}</strong>
-        </p>
       </div>
 
       <nav className={styles.nav} style={{ marginBottom: "20px" }}>
