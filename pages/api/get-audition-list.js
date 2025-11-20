@@ -23,6 +23,16 @@ export default async function handler(req, res) {
     const sheetData = await gsapi.spreadsheets.values.get(opt);
     const rows = sheetData.data.values;
 
+    // Handle empty sheet or no data
+    if (!rows || rows.length === 0) {
+      return res.status(200).json({ auditionList: [] });
+    }
+
+    // Handle sheet with only headers (no data rows)
+    if (rows.length === 1) {
+      return res.status(200).json({ auditionList: [] });
+    }
+
     // Convert sheet rows to JSON format
     const auditionList = rows.slice(1).map((row) => ({
       name: row[0],
