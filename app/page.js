@@ -7,8 +7,10 @@ import styles from './page.module.css';
 import logo from '../public/fort-lauderdale-2025-logo.svg'
 
 import PasswordProtect from './components/PasswordProtect';
+import { useDatabase } from './contexts/DatabaseContext';
 
 export default function Send() {
+  const { selectedDatabase, selectDatabase, DATABASES } = useDatabase();
   const [isSending, setIsSending] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -63,6 +65,70 @@ export default function Send() {
   return (
     // <PasswordProtect>
     <div className={styles.page_wrap}>
+      {/* Database Selection Section */}
+      <div style={{ 
+        marginBottom: "30px", 
+        textAlign: "center",
+        padding: "20px"
+      }}>
+        <h2 style={{ 
+          color: "#0088AD", 
+          marginBottom: "20px",
+          fontSize: "24px",
+          fontWeight: "700"
+        }}>
+          Select Convention Database
+        </h2>
+        <div style={{ 
+          display: "flex", 
+          gap: "20px", 
+          justifyContent: "center",
+          flexWrap: "wrap"
+        }}>
+          <button
+            onClick={() => selectDatabase(DATABASES.FORT_LAUDERDALE_2025)}
+            style={{
+              padding: "15px 30px",
+              fontSize: "18px",
+              fontWeight: "700",
+              backgroundColor: selectedDatabase.id === DATABASES.FORT_LAUDERDALE_2025.id ? "#0088AD" : "#addbe3",
+              color: "#fff",
+              border: selectedDatabase.id === DATABASES.FORT_LAUDERDALE_2025.id ? "3px solid #005f7f" : "3px solid transparent",
+              borderRadius: "10px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              minWidth: "250px"
+            }}
+          >
+            {DATABASES.FORT_LAUDERDALE_2025.name}
+          </button>
+          <button
+            onClick={() => selectDatabase(DATABASES.PANAMA_2026)}
+            style={{
+              padding: "15px 30px",
+              fontSize: "18px",
+              fontWeight: "700",
+              backgroundColor: selectedDatabase.id === DATABASES.PANAMA_2026.id ? "#0088AD" : "#addbe3",
+              color: "#fff",
+              border: selectedDatabase.id === DATABASES.PANAMA_2026.id ? "3px solid #005f7f" : "3px solid transparent",
+              borderRadius: "10px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              minWidth: "250px"
+            }}
+          >
+            {DATABASES.PANAMA_2026.name}
+          </button>
+        </div>
+        <p style={{ 
+          marginTop: "15px", 
+          color: "#555",
+          fontSize: "16px"
+        }}>
+          Currently selected: <strong style={{ color: "#0088AD" }}>{selectedDatabase.name}</strong>
+        </p>
+      </div>
+
       <nav className={styles.nav} style={{ marginBottom: "20px" }}>
         <Link href="./audition">
           <button className={styles.nav_button}>Audition</button>

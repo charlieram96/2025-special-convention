@@ -18,6 +18,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Get spreadsheet ID from request headers
+    const spreadsheetId = req.headers['x-spreadsheet-id'] || "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4";
+    
     // Initialize Google Sheets API
     const client = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
@@ -31,7 +34,7 @@ export default async function handler(req, res) {
 
     // Fetch the sheet data to determine the next ID
     const opt = {
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: "Audition List!A:V",
     };
 
@@ -89,7 +92,7 @@ export default async function handler(req, res) {
 
     // Append the new row to the sheet
     const appendOptions = {
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: "Audition List!A:V",
       valueInputOption: "RAW",
       resource: {

@@ -13,8 +13,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import PasswordProtect from "../components/PasswordProtect";
+import { useDatabase } from '../contexts/DatabaseContext';
 
 export default function Audition() {
+  const { selectedDatabase } = useDatabase();
   const [auditionList, setAuditionList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [uploadingId, setUploadingId] = useState(null);
@@ -44,6 +46,7 @@ export default function Audition() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Spreadsheet-Id": selectedDatabase.spreadsheetId,
         },
         body: JSON.stringify(newAuditionee),
       });
@@ -55,7 +58,11 @@ export default function Audition() {
         setNewAuditionee({ name: "", email: "", category: "Vocals" });
         
         // Refresh the audition list
-        const fetchResponse = await fetch("/api/get-audition-list");
+        const fetchResponse = await fetch("/api/get-audition-list", {
+          headers: {
+            "X-Spreadsheet-Id": selectedDatabase.spreadsheetId,
+          },
+        });
         const fetchData = await fetchResponse.json();
         const initializedData = (fetchData.auditionList || []).map((aud) => ({
           ...aud,
@@ -96,6 +103,7 @@ export default function Audition() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Spreadsheet-Id": selectedDatabase.spreadsheetId,
         },
         body: JSON.stringify(auditionee),
       });
@@ -138,6 +146,7 @@ export default function Audition() {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("auditioneeId", auditioneeNumber);
+    formData.append("spreadsheetId", selectedDatabase.spreadsheetId);
 
     try {
       const response = await fetch("/api/upload-profile-image", {
@@ -172,7 +181,11 @@ export default function Audition() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/get-audition-list");
+        const response = await fetch("/api/get-audition-list", {
+          headers: {
+            "X-Spreadsheet-Id": selectedDatabase.spreadsheetId,
+          },
+        });
         const data = await response.json();
         const initializedData = (data.auditionList || []).map((aud) => ({
           ...aud,
@@ -207,7 +220,7 @@ export default function Audition() {
       }
     };
     fetchData();
-  }, []);
+  }, [selectedDatabase]);
 
   // Toggle filter type
   const toggleFilter = (type) => {

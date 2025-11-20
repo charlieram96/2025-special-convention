@@ -33,6 +33,7 @@ export default async function handler(req, res) {
     });
   
     let auditioneeId = '';
+    let spreadsheetId = '';
     let file;
   
     form.parse(req, async (err, fields, files) => {
@@ -42,6 +43,7 @@ export default async function handler(req, res) {
       }
   
       auditioneeId = fields.auditioneeId;
+      spreadsheetId = fields.spreadsheetId || '1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4';
       file = files.file;
   
       if (!file || !auditioneeId) {
@@ -67,7 +69,7 @@ export default async function handler(req, res) {
         const uploadResult = await s3.upload(params).promise();
         const imageUrl = uploadResult.Location;
   
-        await updateGoogleSheet(auditioneeId, imageUrl);
+        await updateGoogleSheet(auditioneeId, imageUrl, spreadsheetId);
   
         // Clean up the temporary file
         fs.unlinkSync(filePath);
@@ -81,7 +83,7 @@ export default async function handler(req, res) {
   }
   
 
-async function updateGoogleSheet(auditioneeId, imageUrl) {
+async function updateGoogleSheet(auditioneeId, imageUrl, spreadsheetId) {
   const client = new google.auth.JWT(
     process.env.GOOGLE_CLIENT_EMAIL,
     null,
@@ -94,7 +96,7 @@ async function updateGoogleSheet(auditioneeId, imageUrl) {
 
   // Fetch the sheet data to find the row index
   const opt = {
-    spreadsheetId: '1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4',
+    spreadsheetId: spreadsheetId,
     range: 'Audition List!A:G',
   };
 
@@ -112,7 +114,7 @@ async function updateGoogleSheet(auditioneeId, imageUrl) {
   const updateRange = `Audition List!G${rowIndex + 1}`;
 
   await gsapi.spreadsheets.values.update({
-    spreadsheetId: '1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4',
+    spreadsheetId: spreadsheetId,
     range: updateRange,
     valueInputOption: 'RAW',
     resource: {

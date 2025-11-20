@@ -9,6 +9,9 @@ export default async function handler(req, res) {
   const auditionee = req.body;
 
   try {
+    // Get spreadsheet ID from request headers
+    const spreadsheetId = req.headers['x-spreadsheet-id'] || "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4";
+    
     // Initialize Google Sheets API
     const client = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
@@ -22,7 +25,7 @@ export default async function handler(req, res) {
 
     // Fetch the sheet data to find the row index
     const opt = {
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: "Audition List!A:V", // Adjust the range to include all columns
     };
 
@@ -67,7 +70,7 @@ export default async function handler(req, res) {
 
     // Update the row in the sheet
     const updateOptions = {
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: `Audition List!A${rowIndex + 1}:V${rowIndex + 1}`,
       valueInputOption: "RAW",
       resource: {

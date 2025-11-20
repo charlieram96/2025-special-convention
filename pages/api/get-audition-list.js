@@ -3,6 +3,9 @@ import { google } from "googleapis";
 
 export default async function handler(req, res) {
   try {
+    // Get spreadsheet ID from request headers
+    const spreadsheetId = req.headers['x-spreadsheet-id'] || "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4";
+    
     const client = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
       null,
@@ -13,7 +16,7 @@ export default async function handler(req, res) {
     await client.authorize();
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: "Audition List!A:V", // Adjusted to include all columns
     };
 
