@@ -100,10 +100,9 @@ export default function PasswordProtect({ children }) {
         `}</style>
 
         <div className="password-overlay">
-          <img src={logo.src} alt="logo" className="password-logo" />
-
           <div className="password-modal">
-            <h1>Please Enter the Password</h1>
+            <h1 style={{ marginBottom: "10px", color: "#0088AD" }}>Welcome</h1>
+            <p style={{ marginBottom: "20px", color: "#555" }}>Please Enter the Password</p>
             <form onSubmit={handleSubmit}>
               <input
                 type="password"

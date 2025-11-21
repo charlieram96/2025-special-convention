@@ -12,6 +12,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Get spreadsheet ID from request headers
+    const spreadsheetId = req.headers['x-spreadsheet-id'] || "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4";
+    
     // Initialize Google Sheets API
     const client = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
@@ -23,7 +26,7 @@ export default async function handler(req, res) {
     await client.authorize();
     const gsapi = google.sheets({ version: "v4", auth: client });
     const opt = {
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: "Audition List!A:O", // Adjusted to cover all columns including "Result"
     };
 
@@ -37,7 +40,7 @@ export default async function handler(req, res) {
 
     // Update the Result column (Column O) for the specific row
     await gsapi.spreadsheets.values.update({
-      spreadsheetId: "1DUaqTthSg76kqfaY0nQ1d7sOSXF9iTMK2WfYoJwz_a4",
+      spreadsheetId: spreadsheetId,
       range: `Audition List!O${rowIndex + 1}`,
       valueInputOption: "RAW",
       resource: { values: [[result]] },

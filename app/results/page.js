@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./Results.module.css";
-import logo from "../../public/fort-lauderdale-2025-logo.svg";
 import profileBlank from "../../public/blank-profile.jpg";
 
 import PasswordProtect from "../components/PasswordProtect";
+import { useDatabase } from '../contexts/DatabaseContext';
+import fortLauderdaleLogo from "../../public/fort-lauderdale-2025-logo.svg";
+import panamaLogo from "../../public/panama-2026-logo.svg";
 
 export default function Results() {
+  const { selectedDatabase, DATABASES } = useDatabase();
   const [auditionList, setAuditionList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState({}); // Track loading state per auditionee
@@ -28,7 +31,11 @@ export default function Results() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/get-audition-list");
+        const response = await fetch("/api/get-audition-list", {
+          headers: {
+            "X-Spreadsheet-Id": selectedDatabase.spreadsheetId,
+          },
+        });
         const data = await response.json();
 
         // Parse auditionType into an array of auditionTypes
@@ -53,7 +60,7 @@ export default function Results() {
     };
 
     fetchData();
-  }, []);
+  }, [selectedDatabase]);
 
   // Handle result update
   const handleResultUpdate = async (auditioneeNumber, result) => {
@@ -63,7 +70,10 @@ export default function Results() {
     try {
       await fetch("/api/update-audition-result", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Spreadsheet-Id": selectedDatabase.spreadsheetId,
+        },
         body: JSON.stringify({ auditioneeNumber, result }),
       });
 
@@ -128,7 +138,7 @@ export default function Results() {
     return (
       // <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.results_wrap}>
-        <img src={logo.src} className={styles.main_logo} alt="logo" />
+        <img src={selectedDatabase.id === DATABASES.PANAMA_2026.id ? panamaLogo.src : fortLauderdaleLogo.src} className={styles.main_logo} alt="logo" />
 
         {/* Navigation Buttons */}
         <nav className={styles.nav} style={{ marginBottom: "20px" }}>
@@ -160,7 +170,7 @@ export default function Results() {
   return (
     // <PasswordProtect>
     <div style={{ textAlign: "center" }} className={styles.results_wrap}>
-      <img src={logo.src} className={styles.main_logo} alt="logo" />
+      <img src={selectedDatabase.id === DATABASES.PANAMA_2026.id ? panamaLogo.src : fortLauderdaleLogo.src} className={styles.main_logo} alt="logo" />
 
       {/* Navigation Buttons */}
       <nav className={styles.nav} style={{ marginBottom: "20px" }}>
