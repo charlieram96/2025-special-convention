@@ -64,7 +64,7 @@ export default function Send() {
   };
 
   return (
-    // <PasswordProtect>
+    <PasswordProtect>
     <div className={styles.page_wrap}>
       {/* Database Selection Section */}
       <div style={{ 
@@ -168,7 +168,7 @@ export default function Send() {
         {loading ? "Sending Emails..." : "Send Results Emails"}
       </button> */}
     </div>
-    // </PasswordProtect>
+    </PasswordProtect>
 
   );
 }
