@@ -17,6 +17,7 @@ export default function Results() {
   const [buttonLoading, setButtonLoading] = useState({}); // Track loading state per auditionee
   const [resultFilter, setResultFilter] = useState("All"); // Result filter state
   const [selectedAuditionType, setSelectedAuditionType] = useState(null); // Selected audition type
+  const [searchTerm, setSearchTerm] = useState(""); // Search term state
 
   // State variables for metrics
   const [metrics, setMetrics] = useState({
@@ -116,8 +117,17 @@ export default function Results() {
     }
   }, [auditionList, loading, selectedAuditionType]);
 
-  // Filter auditionees based on the selected filter options
+  // Filter auditionees based on search, audition type, and result filter
   const filteredAuditionList = auditionList.filter((auditionee) => {
+    // Apply search filter first
+    const matchesSearch = searchTerm === "" || 
+      auditionee.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      auditionee.auditioneeNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      auditionee.congregation?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      auditionee.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (!matchesSearch) return false;
+
     if (!selectedAuditionType) return false; // If no type selected, skip
 
     // Check if auditionee has the selected audition type
@@ -135,6 +145,21 @@ export default function Results() {
 
   // If no audition type is selected, display selection options
   if (!selectedAuditionType) {
+    // Apply search filter to audition list
+    const searchFilteredList = auditionList.filter((auditionee) => {
+      return searchTerm === "" || 
+        auditionee.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        auditionee.auditioneeNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        auditionee.congregation?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        auditionee.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    // Calculate total auditionees and counts per type
+    const totalAuditionees = searchFilteredList.length;
+    const vocalsCount = searchFilteredList.filter(a => a.auditionTypes.includes("Vocals")).length;
+    const instrumentCount = searchFilteredList.filter(a => a.auditionTypes.includes("Instrument")).length;
+    const danceCount = searchFilteredList.filter(a => a.auditionTypes.includes("Dance")).length;
+
     return (
       // <PasswordProtect>
       <div style={{ textAlign: "center" }} className={styles.results_wrap}>
@@ -148,19 +173,85 @@ export default function Results() {
           <Link href="../audition">
             <button className={styles.nav_button}>Audition</button>
           </Link>
+          <button 
+            className={styles.nav_button}
+            onClick={() => {
+              setSelectedAuditionType(null);
+              setSearchTerm("");
+              setResultFilter("All");
+            }}
+          >
+            Results
+          </button>
         </nav>
 
         <h1>Select Audition Type</h1>
+        
+        {/* Search Bar */}
+        <div style={{ marginBottom: "20px" }}>
+          <input
+            type="text"
+            placeholder="Search by name, number, congregation, or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: "12px 20px",
+              fontSize: "16px",
+              width: "min(500px, 90%)",
+              border: "2px solid #0088AD",
+              borderRadius: "8px",
+              outline: "none",
+              backgroundColor: "#fff",
+              color: "#0088AD",
+            }}
+          />
+        </div>
+
+        {/* Total Auditionees Display */}
+        {!loading && (
+          <div style={{
+            marginBottom: "30px",
+            padding: "20px",
+            backgroundColor: "#E8FCFF",
+            borderRadius: "10px",
+            display: "inline-block",
+            minWidth: "300px"
+          }}>
+            <h2 style={{ 
+              color: "#0088AD", 
+              marginBottom: "15px",
+              fontSize: "24px" 
+            }}>
+              Total Auditionees: {totalAuditionees}
+            </h2>
+            <div style={{ 
+              display: "flex", 
+              gap: "20px", 
+              justifyContent: "center",
+              fontSize: "16px",
+              color: "#555"
+            }}>
+              <div><strong>Vocals:</strong> {vocalsCount}</div>
+              <div><strong>Instrument:</strong> {instrumentCount}</div>
+              <div><strong>Dance:</strong> {danceCount}</div>
+            </div>
+          </div>
+        )}
+
         <div className={styles.selection_buttons}>
-          {["Vocals", "Instrument", "Dance"].map((type) => (
-            <button
-              key={type}
-              onClick={() => setSelectedAuditionType(type)}
-              className={styles.selection_button}
-            >
-              {type}
-            </button>
-          ))}
+          {["Vocals", "Instrument", "Dance"].map((type) => {
+            const count = type === "Vocals" ? vocalsCount : 
+                         type === "Instrument" ? instrumentCount : danceCount;
+            return (
+              <button
+                key={type}
+                onClick={() => setSelectedAuditionType(type)}
+                className={styles.selection_button}
+              >
+                {type} ({count})
+              </button>
+            );
+          })}
         </div>
       </div>
       // </PasswordProtect>
@@ -180,9 +271,32 @@ export default function Results() {
         <Link href="../audition">
           <button className={styles.nav_button}>Audition</button>
         </Link>
+        <Link href="../results">
+          <button className={styles.nav_button}>Results</button>
+        </Link>
       </nav>
 
       <h1>{selectedAuditionType} Auditions</h1>
+
+      {/* Search Bar */}
+      <div style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="Search by name, number, congregation, or email..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            padding: "12px 20px",
+            fontSize: "16px",
+            width: "min(500px, 90%)",
+            border: "2px solid #0088AD",
+            borderRadius: "8px",
+            outline: "none",
+            backgroundColor: "#fff",
+            color: "#0088AD",
+          }}
+        />
+      </div>
 
       {/* Metrics Section */}
       <div className={styles.metrics}>

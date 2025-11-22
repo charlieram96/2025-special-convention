@@ -336,6 +336,8 @@
 
 .nav {
     position: absolute;
+    display: flex;
+    gap: 20px;
     top: 20px;
     left: 20px;
 }

@@ -6,7 +6,8 @@ import styles from "./Audition.module.css";
 
 import profileBlank from "../../public/blank-profile.jpg";
 import uploadIcon from "../../public/upload-icon.svg";
-import logo from "../../public/fort-lauderdale-2025-logo.svg";
+import fortLauderdaleLogo from "../../public/fort-lauderdale-2025-logo.svg";
+import panamaLogo from "../../public/panama-2026-logo.svg";
 import saveIcon from "../../public/save-icon.svg";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -16,7 +17,7 @@ import PasswordProtect from "../components/PasswordProtect";
 import { useDatabase } from '../contexts/DatabaseContext';
 
 export default function Audition() {
-  const { selectedDatabase } = useDatabase();
+  const { selectedDatabase, DATABASES } = useDatabase();
   const [auditionList, setAuditionList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [uploadingId, setUploadingId] = useState(null);
@@ -271,17 +272,17 @@ export default function Audition() {
   return (
     // <PasswordProtect>
     <div style={{ textAlign: "center" }} className={styles.audition_wrap}>
-      <img src={logo.src} className={styles.main_logo} alt="logo" />
+      <img src={selectedDatabase.id === DATABASES.PANAMA_2026.id ? panamaLogo.src : fortLauderdaleLogo.src} className={styles.main_logo} alt="logo" />
 
       {/* Navigation Buttons */}
-      {/* <nav className={styles.nav} style={{ marginBottom: "20px" }}>
+      <nav className={styles.nav} style={{ marginBottom: "20px" }}>
         <Link href="../">
           <button className={styles.nav_button}>Home</button>
         </Link>
         <Link href="../results">
           <button className={styles.nav_button}>Results</button>
         </Link>
-      </nav> */}
+      </nav>
 
       <h1>Audition Scoring</h1>
       
