@@ -471,7 +471,9 @@ export default function Audition() {
                   </div>
 
                   {/* NEW: Harmony Link Input */}
-                  <div className={styles.audition_link}>
+                  <div className={styles.audition_link} style={{
+                    opacity: auditionee.auditionTypes.length === 1 && auditionee.auditionTypes.includes("Instrument") ? 0.5 : 1
+                  }}>
                     Harmony Link:{" "}
                     <input
                       type="text"
@@ -479,6 +481,10 @@ export default function Audition() {
                       onChange={(e) =>
                         handleInputChange(e, auditionee.auditioneeNumber, "harmonyLink")
                       }
+                      disabled={auditionee.auditionTypes.length === 1 && auditionee.auditionTypes.includes("Instrument")}
+                      style={{
+                        cursor: auditionee.auditionTypes.length === 1 && auditionee.auditionTypes.includes("Instrument") ? "not-allowed" : "text"
+                      }}
                     />
                   </div>
 
